@@ -55,7 +55,7 @@ if (isset($_POST['login'])) {
                 <?php if (isset($success)) {
                     echo "<div class='alert alert-success mt-3'>$success</div>";
                     $success = false;
-                    header("Location: view/navbar.php");
+                    header("Location: view/gestAtelier.php");
                 }
                 ?>
             </div>
