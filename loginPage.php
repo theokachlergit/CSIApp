@@ -3,17 +3,17 @@ session_start();
 require 'databases/database.php'; // Inclusion de la connexion à la base de données
 
 if (isset($_POST['login'])) {
-    $username = $_POST['username'];
+    $email = $_POST['email'];
     $password = $_POST['password'];
 
     try {
-        $statement = $pdo->prepare("SELECT email, mdpUtilisateur FROM utilisateur WHERE username = ?");
-        $statement->execute([$username]);
+        $statement = $pdo->prepare("SELECT email, mdpUtilisateur FROM utilisateur WHERE email = ?");
+        $statement->execute([$email]);
         $user = $statement->fetch();
 
-        if ($user && password_verify($password, $user['mdpUtilisateur'])) {
+        if ($user && password_verify($password, password_hash($user['mdpUtilisateur'], PASSWORD_DEFAULT))) {
             $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $username;
+            $_SESSION['email'] = $email;
             $success = "Connexion réussie.";
         } else {
             $error = "Nom d'utilisateur ou mot de passe incorrect.";
@@ -42,7 +42,7 @@ if (isset($_POST['login'])) {
                 <form method="post">
                     <div class="mb-3">
                         <label class="form-label">Nom d'utilisateur</label>
-                        <input type="text" name="username" class="form-control" required>
+                        <input type="text" name="email" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Mot de passe</label>
@@ -51,7 +51,12 @@ if (isset($_POST['login'])) {
                     <button type="submit" name="login" class="btn btn-primary w-100">Connexion</button>
                 </form>
                 <?php if (isset($error)) echo "<div class='alert alert-danger mt-3'>$error</div>"; ?>
-                <?php if (isset($success)) echo "<div class='alert alert-success mt-3'>$success</div>"; ?>
+                <?php if (isset($success)) {
+                    echo "<div class='alert alert-success mt-3'>$success</div>";
+                    $success = false;
+                    header("Location: view/navbar.php");
+                }
+                ?>
             </div>
         </div>
     </div>
