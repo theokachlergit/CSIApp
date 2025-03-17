@@ -7,13 +7,14 @@ if (isset($_POST['login'])) {
     $password = $_POST['password'];
 
     try {
-        $statement = $pdo->prepare("SELECT email, mdpUtilisateur FROM utilisateur WHERE email = ?");
+        $statement = $pdo->prepare("SELECT email, mdpUtilisateur, roleUtilisateur FROM utilisateur WHERE email = ?");
         $statement->execute([$email]);
         $user = $statement->fetch();
 
         if ($user && password_verify($password, password_hash($user['mdpUtilisateur'], PASSWORD_DEFAULT))) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['email'] = $email;
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['role'] = $user['roleUtilisateur'];
+
             $success = "Connexion réussie.";
         } else {
             $error = "Nom d'utilisateur ou mot de passe incorrect.";
