@@ -1,17 +1,17 @@
 <?php
 session_start();
-require 'database.php'; // Inclusion de la connexion à la base de données
+require 'databases/database.php'; // Inclusion de la connexion à la base de données
 
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
     try {
-        $statement = $pdo->prepare("SELECT id, password FROM users WHERE username = ?");
+        $statement = $pdo->prepare("SELECT email, mdpUtilisateur FROM utilisateur WHERE username = ?");
         $statement->execute([$username]);
         $user = $statement->fetch();
 
-        if ($user && password_verify($password, $user['password'])) {
+        if ($user && password_verify($password, $user['mdpUtilisateur'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $username;
             $success = "Connexion réussie.";
