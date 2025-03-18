@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'databases/database.php'; // Inclusion de la connexion à la base de données
+require '../databases/database.php'; // Inclusion de la connexion à la base de données
 
 if (isset($_POST['login'])) {
     $email = $_POST['email'];
@@ -14,8 +14,18 @@ if (isset($_POST['login'])) {
         if ($user && password_verify($password, password_hash($user['mdpUtilisateur'], PASSWORD_DEFAULT))) {
             $_SESSION['email'] = $user['email'];
             $_SESSION['role'] = $user['roleUtilisateur'];
-
             $success = "Connexion réussie.";
+            try {
+                $statement = $pdo->prepare("SELECT * FROM woofer WHERE adresseWoofer = ?");
+                $statement->execute([$email]);
+                $woofer = $statement->fetch();
+                if ($woofer) {
+                    $_SESSION['email'] = $woofer['adresseWoofer'];
+                    header("Location: GestWoofer.php");
+                }
+            } catch (PDOException $e) {
+                $error = "Erreur lors de la connexion: " . $e->getMessage();
+            }
         } else {
             $error = "Nom d'utilisateur ou mot de passe incorrect.";
         }
@@ -54,8 +64,7 @@ if (isset($_POST['login'])) {
                 <?php if (isset($error)) echo "<div class='alert alert-danger mt-3'>$error</div>"; ?>
                 <?php if (isset($success)) {
                     echo "<div class='alert alert-success mt-3'>$success</div>";
-                    $success = false;
-                    header("Location: view/gestAtelier.php");
+                    header("Location: gestAtelier.php");
                 }
                 ?>
             </div>
