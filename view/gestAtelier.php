@@ -38,7 +38,7 @@ try {
 
         .navbar-brand,
         .nav-link {
-            color: white !important;
+            color: white;
         }
 
         .table thead {
@@ -56,10 +56,10 @@ try {
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="#">🌿 ECO-FERME</a>
+            <a class="navbar-brand" href="#">🌿ECO-FERME</a>
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/view/GestProduit.php">Produit</a></li>
-                <li class="nav-item"><a class="nav-link" href="http://">Ventes</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Ventes</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Stocks</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Atelier</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Woofer</a></li>
@@ -70,7 +70,6 @@ try {
     <div class="container mt-4">
         <h2 class="mb-3">Gestion des Ateliers</h2>
         <input type="text" class="form-control mb-3" placeholder="Rechercher un atelier...">
-
         <table class="table table-bordered">
             <thead>
                 <tr>

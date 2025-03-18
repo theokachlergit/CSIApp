@@ -10,7 +10,7 @@ if (isset($_POST['login'])) {
         $statement = $pdo->prepare("SELECT email, mdpUtilisateur, roleUtilisateur FROM utilisateur WHERE email = ?");
         $statement->execute([$email]);
         $user = $statement->fetch();
-
+        //il faudra supprimer password_hash quand la page de création d'utilisateur sera faites.
         if ($user && password_verify($password, password_hash($user['mdpUtilisateur'], PASSWORD_DEFAULT))) {
             $_SESSION['email'] = $user['email'];
             $_SESSION['role'] = $user['roleUtilisateur'];
