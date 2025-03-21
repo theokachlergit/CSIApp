@@ -1,9 +1,9 @@
 <?php
 session_start();
-require 'database.php';
+require '../databases/database.php';
 
 // Récupération des woofers depuis la base de données
-$query = "SELECT * FROM woofers";
+$query = "SELECT * FROM woofer INNER JOIN personne ON woofer.emailPersonneUtilisateur = personne.email";
 $stmt = $pdo->query($query);
 $woofers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -38,13 +38,19 @@ $woofers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <div class="container mt-4">
-        <nav class="nav justify-content-center">
-            <a class="nav-link" href="#">Accueil</a>
-            <a class="nav-link" href="#">Ventes</a>
-            <a class="nav-link" href="#">Stocks</a>
-            <a class="nav-link active" href="#">Woofers</a>
-            <a class="nav-link" href="#">Produits</a>
-        </nav>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">🌿ECO-FERME</a>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/view/GestProduit.php">Produit</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Ventes</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Stocks</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/view/GestAtelier.php">Atelier</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/view/GestWoofer.php">Woofer</a></li>
+            </ul>
+        </div>
+    </nav>
+
 
         <h2 class="mt-4">Gestion des Woofers</h2>
 
@@ -67,19 +73,55 @@ $woofers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td><?= htmlspecialchars($woofer['nom']) ?></td>
                         <td><?= htmlspecialchars($woofer['prenom']) ?></td>
                         <td><?= htmlspecialchars($woofer['email']) ?></td>
-                        <td><?= htmlspecialchars($woofer['date_debut']) ?></td>
-                        <td><?= htmlspecialchars($woofer['date_debut']) ?></td>
-                        <td><?= htmlspecialchars($woofer['date_fin']) ?></td>
+                        <td><?= htmlspecialchars($woofer['dateDebSejour']) ?></td>
+                        <td><?= htmlspecialchars($woofer['dateFinSejour']) ?></td>
                         <td>
-                            <a href="modifier_woofer.php?id=<?= $woofer['id'] ?>" class="btn btn-success btn-sm">Modifier</a>
-                            <a href="supprimer_woofer.php?id=<?= $woofer['id'] ?>" class="btn btn-danger btn-sm">Supprimer</a>
+                            <a class="btn btn-success btn-sm">Modifier</a>
+                            <a class="btn btn-danger btn-sm">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <button class="btn btn-green w-100">Ajouter un Woofer</button>
+        <button class="btn btn-green w-100" data-bs-toggle="modal" data-bs-target="#addWooferModal">Ajouter un Woofer</button>
     </div>
 
+    <!-- Modal d'ajout -->
+    <div class="modal fade" id="addWooferModal" tabindex="-1" aria-labelledby="addWooferLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addWooferLabel">Ajouter un Woofer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="ajouter_woofer.php">
+                        <div class="mb-3">
+                            <label for="nom" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="nom" name="nom" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="prenom" class="form-label">Prénom</label>
+                            <input type="text" class="form-control" id="prenom" name="prenom" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dateDebut" class="form-label">Date Début</label>
+                            <input type="date" class="form-control" id="dateDebut" name="dateDebut" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dateFin" class="form-label">Date Fin</label>
+                            <input type="date" class="form-control" id="dateFin" name="dateFin" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Ajouter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
