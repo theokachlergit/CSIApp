@@ -6,23 +6,27 @@ class Utilisateur
     private string $motDePasse;
     private string $role;
 
-    public static function authentifier(): bool
+
+    public function __construct(string $email, string $motDePasse, string $role)
+    {
+        $this->email = $email;
+        $this->motDePasse = $motDePasse;
+        $this->role = $role;
+    }
+
+    public function authentifier(): bool
     {
         require '../databases/database.php'; // Inclusion de la connexion à la base de données
-        $email = $_POST['email'];
-        $password = $_POST['password'];
         try {
             $statement = $pdo->prepare("SELECT email, mdpUtilisateur, roleUtilisateur FROM utilisateur WHERE email = ?");
-            $statement->execute([$email]);
+            $statement->execute([$this->$email]);
             $user = $statement->fetch();
-            //il faudra supprimer password_hash quand la page de création d'utilisateur sera faites.
-            // if ($user && $password == $user['mdpUtilisateur']) {
-                if ($user && password_verify($password, $user['mdpUtilisateur'])) {
+            if ($user && password_verify($this->$motDePasse, $user['mdpUtilisateur'])) {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $user['roleUtilisateur'];
                 try {
                     $statement = $pdo->prepare("SELECT * FROM woofer WHERE adresseWoofer = ?");
-                    $statement->execute([$email]);
+                    $statement->execute([$this->$email]);
                     $woofer = $statement->fetch();
 
                     if ($woofer) {
@@ -42,14 +46,13 @@ class Utilisateur
         return false;
     }
 
-    public function modifierProfil($motDePasse): void
+    public function modifierProfil(): void
     {
         require '../databases/database.php'; // Inclusion de la connexion à la base de données
-        $email = $_SESSION['email'];
         try {
-            $motDePasse = password_hash($motDePasse, PASSWORD_DEFAULT);
+            $motDePasse = password_hash($this->$motDePasse, PASSWORD_DEFAULT);
             $statement = $pdo->prepare("UPDATE utilisateur SET mdpUtilisateur = ? WHERE email = ?");
-            $statement->execute([$motDePasse, $email]);
+            $statement->execute([$this->$motDePasse, $this->$email]);
         } catch (PDOException $e) {
         }
     }
