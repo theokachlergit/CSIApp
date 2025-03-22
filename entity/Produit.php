@@ -1,21 +1,23 @@
 <?php
+class Produit {
+    private int $id;
+    private string $nom;
+    private float $prix;
+    private string $categorie;
+    private int $stock;
 
-class Produit
-{
-    public int $idProduit;
-    public enumTypeProduit $typeProduit;
-    public string $libelle;
-    public int $quantiteStock;
-    public int $prixUnitaire;
-
-    public function mettreAJourStock(int $qte, $id): void
-    {
-        
+    public function __construct(int $id, string $nom, float $prix, string $categorie, int $stock) {
+        $this->id = $id;
+        $this->nom = $nom;
+        $this->prix = $prix;
+        $this->categorie = $categorie;
+        $this->stock = $stock;
     }
 
-    function verifierStock(): int
-    {
-        return $this->quantiteStock > 0;
-    }
+    public function getId(): int { return $this->id; }
+    public function getNom(): string { return $this->nom; }
+    public function getPrix(): float { return $this->prix; }
+    public function getCategorie(): string { return $this->categorie; }
+    public function getStock(): int { return $this->stock; }
 }
 

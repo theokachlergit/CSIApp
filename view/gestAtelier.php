@@ -62,7 +62,9 @@ try {
                 <li class="nav-item"><a class="nav-link" href="#">Ventes</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Stocks</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Atelier</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Woofer</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/view/GestWoofer.php">Woofer</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/view/Profil.php">Profil</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/databases/logout.php">Se déconnecter</a></li>
             </ul>
         </div>
     </nav>
@@ -84,9 +86,9 @@ try {
             <tbody>
                 <?php foreach ($ateliers as $atelier): ?>
                     <tr>
-                        <td><?= htmlspecialchars($atelier['nom']) ?></td>
-                        <td><?= htmlspecialchars($atelier['date']) ?></td>
-                        <td><?= htmlspecialchars($atelier['responsable']) ?></td>
+                        <td><?= htmlspecialchars($atelier['thematiqueAtelier']) ?></td>
+                        <td><?= htmlspecialchars($atelier['dateAtelier']) ?></td>
+                        <td><?= htmlspecialchars($atelier['emailWoofer']) ?></td>
                         <td><button class="btn btn-success btn-sm">Voir</button></td>
                         <td><button class="btn btn-green btn-sm">Gérer</button></td>
                         <td>
