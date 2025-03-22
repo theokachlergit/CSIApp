@@ -1,11 +1,10 @@
 <?php 
 session_start();
 
-class Woofer {
+class Woofer extends Personne
+{
     public int $id;
-    public String $nom;
-    public String $prenom;
-    public String $email;
+    public String $photo;
     public DateTime $date_debut;
     public DateTime $date_fin;
 

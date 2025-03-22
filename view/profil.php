@@ -1,13 +1,16 @@
 <?php
 session_start();
 require '../databases/database.php';
-
-// Récupération des woofers depuis la base de données
-$query = "SELECT * FROM woofer INNER JOIN personne ON woofer.emailPersonneUtilisateur = personne.email";
+$email = $_SESSION['email'];
+// Récupération des profils$profils depuis la base de données
+$query = "SELECT * FROM Utilisateur INNER JOIN Woofer ON Woofer.emailPersonneUtilisateur = '" . $email . "' INNER JOIN Personne ON personne.email = '" . $email  . "' WHERE Utilisateur.email = '" . $email . "'";
 $stmt = $pdo->query($query);
-$woofers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$profils = $stmt->fetchAll(PDO::FETCH_ASSOC);
+if (isset($_POST['modify'])) {
+    require '../controller/AppController.php';
+    modifyProfil();
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -53,77 +56,79 @@ $woofers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/view/GestWoofer.php">Woofer</a></li>
                     <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/view/Profil.php">Profil</a></li>
                     <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/databases/logout.php">Se déconnecter</a></li>
-
                 </ul>
             </div>
         </nav>
 
 
-        <h2 class="mt-4">Gestion des Woofers</h2>
-
-        <input type="text" class="form-control mb-3" placeholder="Rechercher un woofer...">
-
+        <h2 class="mt-4">Gestion de votre profils</h2>
         <table class="table table-bordered">
             <thead class="table-success">
                 <tr>
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Email</th>
+                    <th>Num Tel</th>
                     <th>Date Début</th>
                     <th>Date Fin</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($woofers as $woofer): ?>
+                <?php foreach ($profils as $profil): ?>
                     <tr>
-                        <td><?= htmlspecialchars($woofer['nom']) ?></td>
-                        <td><?= htmlspecialchars($woofer['prenom']) ?></td>
-                        <td><?= htmlspecialchars($woofer['email']) ?></td>
-                        <td><?= htmlspecialchars($woofer['dateDebSejour']) ?></td>
-                        <td><?= htmlspecialchars($woofer['dateFinSejour']) ?></td>
+                        <td><?= htmlspecialchars($profil['nom']) ?></td>
+                        <td><?= htmlspecialchars($profil['prenom']) ?></td>
+                        <td><?= htmlspecialchars($profil['email']) ?></td>
+                        <td><?= htmlspecialchars($profil['numTel']) ?></td>
+                        <td><?= htmlspecialchars($profil['dateDebSejour']) ?></td>
+                        <td><?= htmlspecialchars($profil['dateFinSejour']) ?></td>
                         <td>
-                            <a class="btn btn-success btn-sm">Modifier</a>
-                            <a class="btn btn-danger btn-sm">Supprimer</a>
+                            <a class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#editWooferModal">Modifier</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <button class="btn btn-green w-100" data-bs-toggle="modal" data-bs-target="#addWooferModal">Ajouter un Woofer</button>
     </div>
 
-    <!-- Modal d'ajout -->
-    <div class="modal fade" id="addWooferModal" tabindex="-1" aria-labelledby="addWooferLabel" aria-hidden="true">
+    <!-- Modal de modification -->
+    <div class="modal fade" id="editWooferModal" tabindex="-1" aria-labelledby="editWooferLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addWooferLabel">Ajouter un Woofer</h5>
+                    <h5 class="modal-title" id="editWooferLabel">Modifier un Woofer</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="ajouter_woofer.php">
+                    <form method="post">
                         <div class="mb-3">
                             <label for="nom" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="nom" name="nom" required>
+                            <input type="text" class="form-control" id="nom" name="nom" required value="<?= $profil['nom'] ?>">
                         </div>
                         <div class="mb-3">
                             <label for="prenom" class="form-label">Prénom</label>
-                            <input type="text" class="form-control" id="prenom" name="prenom" required>
+                            <input type="text" class="form-control" id="prenom" name="prenom" required value="<?= $profil['prenom'] ?>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="numTel" class="form-label">Numéro de téléphone</label>
+                            <input type="tel" class="form-control" id="numTel" name="numTel" required value="<?= $profil['numTel'] ?>">
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
+                            <input type="email" disabled=true class="form-control" id="email" name="email" required value="<?= $profil['email'] ?>">
                         </div>
+                        <!-- Champ pour le mot de passe (mdpUtilisateur) -->
                         <div class="mb-3">
-                            <label for="dateDebut" class="form-label">Date Début</label>
-                            <input type="date" class="form-control" id="dateDebut" name="dateDebut" required>
+                            <label for="mdpUtilisateur" class="form-label">Mot de passe</label>
+                            <input type="password" class="form-control" id="mdpUtilisateur" name="mdpUtilisateur" required>
                         </div>
+                        <!-- Champ pour l'adresse (adresseWoofer) -->
                         <div class="mb-3">
-                            <label for="dateFin" class="form-label">Date Fin</label>
-                            <input type="date" class="form-control" id="dateFin" name="dateFin" required>
+                            <label for="adresseWoofer" class="form-label">Adresse</label>
+                            <input type="text" class="form-control" id="adresseWoofer" name="adresseWoofer" required value="<?= $profil['adresseWoofer'] ?>">
                         </div>
-                        <button type="submit" class="btn btn-success">Ajouter</button>
+                        <button type="submit" name="modify" class="btn btn-success">Modifier</button>
                     </form>
                 </div>
             </div>

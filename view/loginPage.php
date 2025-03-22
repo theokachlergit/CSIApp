@@ -1,37 +1,11 @@
 <?php
 session_start();
-require '../databases/database.php'; // Inclusion de la connexion à la base de données
-
+$connect = false;
+$firstArrive = true;
 if (isset($_POST['login'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    try {
-        $statement = $pdo->prepare("SELECT email, mdpUtilisateur, roleUtilisateur FROM utilisateur WHERE email = ?");
-        $statement->execute([$email]);
-        $user = $statement->fetch();
-        //il faudra supprimer password_hash quand la page de création d'utilisateur sera faites.
-        if ($user && password_verify($password, password_hash($user['mdpUtilisateur'], PASSWORD_DEFAULT))) {
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['role'] = $user['roleUtilisateur'];
-            $success = "Connexion réussie.";
-            try {
-                $statement = $pdo->prepare("SELECT * FROM woofer WHERE adresseWoofer = ?");
-                $statement->execute([$email]);
-                $woofer = $statement->fetch();
-                if ($woofer) {
-                    $_SESSION['email'] = $woofer['adresseWoofer'];
-                    header("Location: GestWoofer.php");
-                }
-            } catch (PDOException $e) {
-                $error = "Erreur lors de la connexion: " . $e->getMessage();
-            }
-        } else {
-            $error = "Nom d'utilisateur ou mot de passe incorrect.";
-        }
-    } catch (PDOException $e) {
-        $error = "Erreur lors de la connexion: " . $e->getMessage();
-    }
+    $firstArrive = false;
+    require '../controller/AppController.php';
+    $connect = auth();
 }
 ?>
 
@@ -61,9 +35,9 @@ if (isset($_POST['login'])) {
                     </div>
                     <button type="submit" name="login" class="btn btn-primary w-100">Connexion</button>
                 </form>
-                <?php if (isset($error)) echo "<div class='alert alert-danger mt-3'>$error</div>"; ?>
-                <?php if (isset($success)) {
-                    echo "<div class='alert alert-success mt-3'>$success</div>";
+                <?php if (!$connect && !$firstArrive) echo "<div class='alert alert-danger mt-3'>Erreur de connexion ou email/mot de passe incorrect</div>"; ?>
+                <?php if ($connect) {
+                    echo "<div class='alert alert-success mt-3'>Connexion reussie</div>";
                     header("Location: gestAtelier.php");
                 }
                 ?>

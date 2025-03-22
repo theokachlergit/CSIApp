@@ -63,6 +63,8 @@ try {
                 <li class="nav-item"><a class="nav-link" href="#">Stocks</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Atelier</a></li>
                 <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/view/GestWoofer.php">Woofer</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/view/Profil.php">Profil</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/CSIAPP/databases/logout.php">Se déconnecter</a></li>
             </ul>
         </div>
     </nav>
