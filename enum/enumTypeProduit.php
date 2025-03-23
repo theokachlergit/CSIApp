@@ -7,21 +7,22 @@
     case Confiture;
 
 
-    private function StringOfProduit() {
+    private function StringOfProduit(): String
+    {
         switch ($this) {
-            case $this->Fromage :
+            case $this->Fromage:
                 return "Fromage";
                 break;
-            case $this->Oeuf :
+            case $this->Oeuf:
                 return "Oeuf";
                 break;
-            case $this->Lait :
+            case $this->Lait:
                 return "Lait";
                 break;
-            case $this->Legume :
+            case $this->Legume:
                 return "Legume";
-                break;    
-            case $this->Confiture :
+                break;
+            case $this->Confiture:
                 return "Confiture";
                 break;
             default:

@@ -47,7 +47,8 @@ try {
     }
     ?>
 
-    <div class="container mt-4">
+    <div class="container-xxl
+">
         <h2 class="mb-3">Gestion des Produits</h2>
         <input type="text" class="form-control mb-3" placeholder="Rechercher un produit...">
         <table class="table table-bordered">

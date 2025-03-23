@@ -34,32 +34,33 @@ if (isset($_POST['modify'])) {
         }
     }
     ?>
+    <div class="container-xxl">
 
-    <h2 class="mt-4">Gestion de votre profils</h2>
-    <table class="table table-bordered">
-        <thead class="table-success">
-            <tr>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Email</th>
-                <th>Num Tel</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($profils as $profil): ?>
+        <h2 class="mt-4">Gestion de votre profils</h2>
+        <table class="table table-bordered">
+            <thead class="table-success">
                 <tr>
-                    <td><?= htmlspecialchars($profil['nom']) ?></td>
-                    <td><?= htmlspecialchars($profil['prenom']) ?></td>
-                    <td><?= htmlspecialchars($profil['email']) ?></td>
-                    <td><?= htmlspecialchars($profil['numTel']) ?></td>
-                    <td>
-                        <a class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#editWooferModal">Modifier</a>
-                    </td>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Num Tel</th>
+                    <th>Actions</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($profils as $profil): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($profil['nom']) ?></td>
+                        <td><?= htmlspecialchars($profil['prenom']) ?></td>
+                        <td><?= htmlspecialchars($profil['email']) ?></td>
+                        <td><?= htmlspecialchars($profil['numTel']) ?></td>
+                        <td>
+                            <a class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#editWooferModal">Modifier</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 
     <!-- Modal de modification -->
@@ -103,6 +104,7 @@ if (isset($_POST['modify'])) {
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

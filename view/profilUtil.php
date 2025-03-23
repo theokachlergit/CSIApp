@@ -34,7 +34,8 @@ if (isset($_POST['modify'])) {
         }
     }
     ?>
-    <div class="container mt-4">
+    <div class="container-xxl
+">
 
         <h2 class="mt-4">Gestion de votre profils</h2>
         <table class="table table-bordered">

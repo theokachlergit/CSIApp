@@ -39,4 +39,16 @@ class Personne
             var_dump($e);
         }
     }
+
+    public function deleteProfil($pdo)
+    {
+        $email = $_SESSION['email'];
+        try {
+            $statement = $pdo->prepare("DELETE FROM personne WHERE email = ?");
+            $statement->bindParam(1, $email, PDO::PARAM_STR);
+            $statement->execute();
+        } catch (PDOException $e) {
+            var_dump($e);
+        }
+    }
 }

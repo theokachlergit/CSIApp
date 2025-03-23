@@ -41,3 +41,18 @@ function modifyProfilRes($pdo): void
     $user = new Utilisateur($_SESSION['email'], $_POST['mdpUtilisateur'], $_SESSION['role']);
     $user->modifierProfil($pdo);
 }
+
+function modifyWoofer($pdo): void
+{
+    require_once '../entity/Woofer.php';
+    $woofer = new Woofer("", "", new DateTime($_POST['dateDebSejour']), new DateTime($_POST['dateFinSejour']));
+    $woofer->modifierInformations($pdo);
+}
+
+function addWoofer($pdo): void
+{
+    require_once '../entity/Woofer.php';
+    $woofer = new Woofer($_POST['adresseWoofer'], "", new DateTime($_POST['date_debut']), new DateTime($_POST['date_fin']));
+    $utilisateur = new Utilisateur($_POST['email'], "", $_SESSION['role']);  
+    $woofer->addWoofer($pdo);
+}

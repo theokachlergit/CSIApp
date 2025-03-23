@@ -14,7 +14,6 @@ if (!isset($_SESSION['email'])) {
 try {
     $stmt = $pdo->query("SELECT * FROM atelier");
     $ateliers = $stmt->fetchAll();
-    var_dump($ateliers);
 } catch (PDOException $e) {
     die("Erreur : " . $e->getMessage());
 }
@@ -42,11 +41,11 @@ try {
     }
     ?>
 
-    <div class="container mt-4">
+    <div class="container-xxl
+">
         <h2 class="mb-3">Gestion des Ateliers</h2>
-        <input type="text" class="form-control mb-3" placeholder="Rechercher un atelier...">
         <table class="table table-bordered">
-            <thead>
+            <thead class="table-success">
                 <tr>
                     <th>Nom</th>
                     <th>Date</th>

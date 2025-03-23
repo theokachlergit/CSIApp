@@ -1,8 +1,11 @@
 <?php
-session_start();
 $connect = false;
 $firstArrive = true;
+if (session_unset()) {
+    session_destroy();
+}
 if (isset($_POST['login'])) {
+    session_start();
     $firstArrive = false;
     require '../controller/AppController.php';
     $connect = auth();
@@ -21,7 +24,8 @@ if (isset($_POST['login'])) {
 </head>
 
 <body>
-    <div class="container mt-5">
+    <div class="container-xxl
+">
         <h2 class="text-center">Bienvenue</h2>
         <div class="row justify-content-center">
             <div class="col-md-4">
@@ -37,7 +41,8 @@ if (isset($_POST['login'])) {
                     <button type="submit" name="login" class="btn btn-primary w-100">Connexion</button>
                 </form>
                 <?php if (!$connect && !$firstArrive) echo "<div class='alert alert-danger mt-3'>Erreur de connexion ou email/mot de passe incorrect</div>"; ?>
-                <?php if ($connect) {
+                <?php
+                if ($connect) {
                     echo "<div class='alert alert-success mt-3'>Connexion reussie</div>";
                     header("Location: gestAtelier.php");
                 }
