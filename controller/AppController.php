@@ -48,7 +48,7 @@ function prolongerSejour($pdo): void
     require '../entity/Woofer.php';
     var_dump($_POST);
     $woofer = new Woofer("", "", new DateTime('01-01-01'), new DateTime($_POST['dateFinSejour']));
-    $woofer->modifierInformations($pdo, $_POST['duree']);
+    $woofer->prolongerSejour($pdo, $_POST['duree']);
 }
 
 function CreerWoofer($pdo): void
@@ -60,9 +60,9 @@ function CreerWoofer($pdo): void
     $woofer = new Woofer($_POST['adresseWoofer'], "", new DateTime($_POST['date_debut']), new DateTime($_POST['date_fin']));
     $utilisateur = new Utilisateur($_POST['email'], $_POST['password'], Role::Woofer);
     $personne = new Personne($_POST['nom'], $_POST['prenom'], $_POST['numTel']);
-    $woofer->addWoofer($pdo);
+    $woofer->creerWoofer($pdo);
     $personne->addPersonne($pdo);
-    $utilisateur->addUtilisateur($pdo);
+    $utilisateur->creerUtilisateur($pdo);
     header("Location: ../view/gestWoofer.php");
 }
 function getAllAteliers($pdo)
@@ -109,8 +109,16 @@ function addAtelier($pdo): void
     header("Location: ../view/gestAtelier.php");
 }
 
-function getAllPersonne($pdo) {
-    $stmt = $pdo->query("SELECT * FROM personne");
+function getAllPersonne($pdo)
+{
+    $stmt = $pdo->query("SELECT emailPersonne AS email FROM inscrit");
     $personnes = $stmt->fetchAll();
     return $personnes;
+}
+function inscrire($pdo): void
+{
+    require '../entity/Atelier.php';
+    var_dump(substr($_POST['atelierId'], 0, -1));
+    $inscrit = Atelier::inscrireParticipant($pdo, $_POST['email'], substr($_POST['atelierId'], 0, -1));
+    header("Location: ../view/gestAtelier.php");
 }

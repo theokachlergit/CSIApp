@@ -60,7 +60,7 @@ class Utilisateur
         }
     }
 
-    public function addUtilisateur(PDO $pdo): void
+    public function creerUtilisateur(PDO $pdo): void
     {
         try {
             $motDePasseChiffre = password_hash($this->motDePasse, PASSWORD_DEFAULT);

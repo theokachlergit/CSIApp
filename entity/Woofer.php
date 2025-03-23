@@ -15,7 +15,7 @@ class Woofer extends Personne
         $this->date_fin = $date_fin;
     }
 
-    public function modifierInformations($pdo, int $duree)
+    public function prolongerSejour($pdo, int $duree)
     {
         $email = $_POST['email'];
         try {
@@ -41,7 +41,7 @@ class Woofer extends Personne
         }
     }
 
-    public function addWoofer($pdo)
+    public function creerWoofer($pdo)
     {
         $email = $_POST['email'];
         try {
@@ -51,18 +51,6 @@ class Woofer extends Personne
             $statement->bindParam(3, $this->photo, PDO::PARAM_STR);
             $statement->bindParam(4, $this->date_debut, PDO::PARAM_STR);
             $statement->bindParam(5, $this->date_fin, PDO::PARAM_STR);
-            $statement->execute();
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        }
-    }
-
-    public function deleteWoofer($pdo)
-    {
-        $email = $_POST['email'];
-        try {
-            $statement = $pdo->prepare("DELETE FROM woofer WHERE emailPersonneUtilisateur = ?");
-            $statement->bindParam(1, $email, PDO::PARAM_STR);
             $statement->execute();
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();

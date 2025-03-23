@@ -15,8 +15,14 @@ if (!isset($_SESSION['email'])) {
 if (isset($_POST['create'])) {
     addAtelier($pdo);
 }
+if (isset($_POST['Inscrire'])) {
+    inscrire($pdo);
+}
+
 // Récupération des ateliers depuis la BDD
 $ateliers = getAllAteliers($pdo);
+$personnes = getAllPersonne($pdo);
+var_dump($personnes)
 ?>
 
 <!DOCTYPE html>
@@ -69,7 +75,12 @@ $ateliers = getAllAteliers($pdo);
                         <?php if (isset($_SESSION['role'])) { ?>
                             <?php if ($_SESSION['role'] == 'Responsable') { ?>
                                 <td><button class="btn btn-green btn-sm">Gérer</button>
-                                    <button class="btn btn-green btn-sm" type="button">Inscrire</button>
+                                    <button type="button" class="btn btn-sm btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#inscrirePersonneModal"
+                                        data-atelierid="42">
+                                        Inscrire
+                                    </button>
                                 </td>
                                 <td><button class="btn btn-danger btn-sm">Annuler</button></td>
                             <?php } else { ?>
@@ -142,8 +153,54 @@ $ateliers = getAllAteliers($pdo);
         </div>
     </div>
 
-    <!-- Inclusion de Bootstrap JS -->
+    <!-- Modal -->
+    <div class="modal fade" id="inscrirePersonneModal" tabindex="-1" aria-labelledby="inscrirePersonneModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inscrirePersonneModalLabel">Inscrire une personne</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <!-- Liste déroulante pour sélectionner un email parmi les personnes -->
+                        <div class="mb-3">
+                            <label for="personneEmail" class="form-label">Sélectionnez un email</label>
+                            <select class="form-select" name="email" id="personneEmail" required>
+                                <?php foreach ($personnes as $p): ?>
+                                    <option value="<?= htmlspecialchars($p['email']) ?>"><?= htmlspecialchars($p['email']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <!-- Champ caché pour l'id de l'atelier -->
+                        <input type="hidden" name="atelierId" id="atelierId" value="">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-primary" name="Inscrire">Inscrire</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Code JavaScript pour mettre à jour le champ caché avec l'id de l'atelier -->
+    <script>
+        var inscrireModal = document.getElementById('inscrirePersonneModal');
+        inscrireModal.addEventListener('show.bs.modal', function(event) {
+            // Récupère le bouton qui a déclenché l'ouverture de la modal
+            var button = event.relatedTarget;
+            // Récupère l'id de l'atelier depuis l'attribut data-atelierid
+            var atelierId = button.getAttribute('data-atelierid');
+            // Met à jour le champ caché dans la modal
+            var inputAtelierId = inscrireModal.querySelector('#atelierId');
+            inputAtelierId.value = atelierId;
+        });
+    </script>
+
+    <!-- Inclusion de Bootstrap CSS et JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

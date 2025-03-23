@@ -22,13 +22,11 @@ class Atelier
     }
 
 
-    public function inscrireParticipant($pdo, $email): void {
-        $statement = $pdo->prepare("INSERT INTO inscrit (emailPersonne) VALUES ?)");
-        $statement->bindParam(1, $email, PDO::PARAM_STR);
-        $statement->execute();
+    public static function inscrireParticipant($pdo, $email, $idAtelier): void
+    {
         $statement = $pdo->prepare("INSERT INTO participe (emailInscrit, idAtelier) VALUES (?, ?)");
         $statement->bindParam(1, $email, PDO::PARAM_STR);
-        $statement->bindParam(2, $this->idAtelier, PDO::PARAM_INT);
+        $statement->bindParam(2, $idAtelier, PDO::PARAM_INT);
         $statement->execute();
     }
 
