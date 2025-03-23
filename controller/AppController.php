@@ -22,3 +22,5 @@ function modifyProfil(): void
     var_dump($_POST);
     $user->modifierProfil($_POST['mdpUtilisateur']);
 }
+
+
