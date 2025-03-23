@@ -25,7 +25,7 @@ $woofers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <?php
     if (isset($_SESSION['role'])) {
-        if ($_SESSION['role'] != 'Administrateur') {
+        if ($_SESSION['role'] != 'Responsable') {
             require 'nav-bar.html';
         } else {
             require 'nav-bar-admin.html';
@@ -35,8 +35,6 @@ $woofers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
     <h2 class="mt-4">Gestion des Woofers</h2>
-
-    <input type="text" class="form-control mb-3" placeholder="Rechercher un woofer...">
 
     <table class="table table-bordered">
         <thead class="table-success">
@@ -58,7 +56,16 @@ $woofers = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <td><?= htmlspecialchars($woofer['dateDebSejour']) ?></td>
                     <td><?= htmlspecialchars($woofer['dateFinSejour']) ?></td>
                     <td>
-                        <a class="btn btn-success btn-sm">Modifier</a>
+                        <a class="btn btn-green btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editWooferModal"
+                            data-email="<?= htmlspecialchars($woofer['email']) ?>"
+                            data-nom="<?= htmlspecialchars($woofer['nom']) ?>"
+                            data-prenom="<?= htmlspecialchars($woofer['prenom']) ?>"
+                            data-deb="<?= htmlspecialchars($woofer['dateDebSejour']) ?>"
+                            data-fin="<?= htmlspecialchars($woofer['dateFinSejour']) ?>">
+                            Modifier
+                        </a>
                         <a class="btn btn-danger btn-sm">Supprimer</a>
                     </td>
                 </tr>
@@ -67,44 +74,89 @@ $woofers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </table>
     <button class="btn btn-green w-100" data-bs-toggle="modal" data-bs-target="#addWooferModal">Ajouter un Woofer</button>
     </div>
+    <script>
+        var editWooferModal = document.getElementById('editWooferModal');
+        editWooferModal.addEventListener('show.bs.modal', function(event) {
+            // Le bouton qui a déclenché l'ouverture de la modal
+            var button = event.relatedTarget;
+            var dateDeb = button.getAttribute('data-deb');
+            var dateFin = button.getAttribute('data-fin');
 
-    <!-- Modal d'ajout -->
-    <div class="modal fade" id="addWooferModal" tabindex="-1" aria-labelledby="addWooferLabel" aria-hidden="true">
+            // Remplir les champs du formulaire dans la modal
+            var modal = this;
+            modal.querySelector('input[name="dateDebSejour"]').value = dateDeb;
+            modal.querySelector('input[name="dateFinSejour"]').value = dateFin;
+        });
+    </script>
+
+    <!-- Modal de modification -->
+    <div class="modal fade" id="editWooferModal" tabindex="-1" aria-labelledby="editWooferLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addWooferLabel">Ajouter un Woofer</h5>
+                    <h5 class="modal-title" id="editWooferLabel">Modifier un Woofer</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="ajouter_woofer.php">
+                    <form method="post">
                         <div class="mb-3">
-                            <label for="nom" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="nom" name="nom" required>
+                            <label for="dateDebSejour" class="form-label">Date début</label>
+                            <input type="date" class="form-control" name="dateDebSejour" id="dateDebSejour">
                         </div>
                         <div class="mb-3">
-                            <label for="prenom" class="form-label">Prénom</label>
-                            <input type="text" class="form-control" id="prenom" name="prenom" required>
+                            <label for="dateFinSejour" class="form-label">Date fin</label>
+                            <input type="date" class="form-control" name="dateFinSejour" id="dateFinSejour">
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="dateDebut" class="form-label">Date Début</label>
-                            <input type="date" class="form-control" id="dateDebut" name="dateDebut" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="dateFin" class="form-label">Date Fin</label>
-                            <input type="date" class="form-control" id="dateFin" name="dateFin" required>
-                        </div>
-                        <button type="submit" class="btn btn-success">Ajouter</button>
+                        <button type="submit" name="modify" class="btn btn-success">Modifier</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+<!-- Modal d'ajout -->
+<div class="modal fade" id="addWooferModal" tabindex="-1" aria-labelledby="addWooferLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addWooferLabel">Ajouter un Woofer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="ajouter_woofer.php">
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="nom" name="nom" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="prenom" class="form-label">Prénom</label>
+                        <input type="text" class="form-control" id="prenom" name="prenom" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Adresse</label>
+                        <input type="email" class="form-control" id="adresse" name="adresse" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateDebut" class="form-label">Date Début</label>
+                        <input type="date" class="form-control" id="dateDebut" name="dateDebut" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateFin" class="form-label">Date Fin</label>
+                        <input type="date" class="form-control" id="dateFin" name="dateFin" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Ajouter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

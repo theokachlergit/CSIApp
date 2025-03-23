@@ -9,7 +9,7 @@ $stmt = $pdo->query($query);
 $profils = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if (isset($_POST['modify'])) {
     require '../controller/AppController.php';
-    modifyProfil();
+    modifyProfil($pdo);
 }
 ?>
 <!DOCTYPE html>
@@ -18,33 +18,16 @@ if (isset($_POST['modify'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Woofers</title>
-    <link rel="stylesheet" href="css.css">
+    <title>Gestion du profil</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        .header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .btn-green {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .btn-green:hover {
-            background-color: #388E3C;
-        }
-    </style>
+    <link rel="stylesheet" href="css.css">
 </head>
 
 <body>
 
     <?php
     if (isset($_SESSION['role'])) {
-        if ($_SESSION['role'] != 'Administrateur') {
+        if ($_SESSION['role'] != 'Responsable') {
             require 'nav-bar.html';
         } else {
             require 'nav-bar-admin.html';
@@ -60,8 +43,6 @@ if (isset($_POST['modify'])) {
                 <th>Prénom</th>
                 <th>Email</th>
                 <th>Num Tel</th>
-                <th>Date Début</th>
-                <th>Date Fin</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -72,8 +53,6 @@ if (isset($_POST['modify'])) {
                     <td><?= htmlspecialchars($profil['prenom']) ?></td>
                     <td><?= htmlspecialchars($profil['email']) ?></td>
                     <td><?= htmlspecialchars($profil['numTel']) ?></td>
-                    <td><?= htmlspecialchars($profil['dateDebSejour']) ?></td>
-                    <td><?= htmlspecialchars($profil['dateFinSejour']) ?></td>
                     <td>
                         <a class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#editWooferModal">Modifier</a>
                     </td>

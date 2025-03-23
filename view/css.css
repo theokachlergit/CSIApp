@@ -42,12 +42,6 @@
             color: white;
         }
 
-        .header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
 
         .btn-green {
             background-color: #4CAF50;
@@ -102,4 +96,24 @@
 
         .nav-item .nav-link {
             color: white;
+        }
+
+        .navbar-brand {
+            color: white !important;
+        }
+
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .btn-green {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-green:hover {
+            background-color: #388E3C;
         }
