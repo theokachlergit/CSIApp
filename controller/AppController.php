@@ -3,7 +3,7 @@
 function auth(): bool
 
 {
-    var_dump($_POST);
+
     require '../entity/Utilisateur.php';
     require '../enum/Role.php';
     $user = new Utilisateur($_POST['email'],  $_POST['password'], Role::Woofer);
@@ -24,7 +24,12 @@ function modifyProfil($pdo): void
     require '../entity/Woofer.php';
     require '../entity/Personne.php';
     $user = new Utilisateur($_SESSION['email'], $_POST['mdpUtilisateur'], $_SESSION['role']);
-    $personne = new Personne($_POST['nom'], $_POST['prenom'], $_POST['numTel']);
+    $personne = new Personne(
+        $_SESSION['email'],
+        $_POST['nom'],
+        $_POST['prenom'],
+        $_POST['numTel']
+    );
     $statement = $pdo->prepare("SELECT * FROM woofer WHERE emailPersonneUtilisateur = ?");
     $statement->bindParam(1, $_SESSION['email'], PDO::PARAM_STR);
     $statement->execute();
@@ -37,7 +42,7 @@ function modifyProfil($pdo): void
 }
 function modifyProfilRes($pdo): void
 {
-    var_dump($_POST);
+
     require '../entity/Utilisateur.php';
     $user = new Utilisateur($_SESSION['email'], $_POST['mdpUtilisateur'], $_SESSION['role']);
     $user->modifierProfil($pdo);
@@ -46,7 +51,7 @@ function modifyProfilRes($pdo): void
 function prolongerSejour($pdo): void
 {
     require '../entity/Woofer.php';
-    var_dump($_POST);
+
     $woofer = new Woofer("", "", new DateTime('01-01-01'), new DateTime($_POST['dateFinSejour']));
     $woofer->prolongerSejour($pdo, $_POST['duree']);
 }
@@ -59,7 +64,12 @@ function CreerWoofer($pdo): void
     require '../enum/Role.php';
     $woofer = new Woofer($_POST['adresseWoofer'], "", new DateTime($_POST['date_debut']), new DateTime($_POST['date_fin']));
     $utilisateur = new Utilisateur($_POST['email'], $_POST['password'], Role::Woofer);
-    $personne = new Personne($_POST['nom'], $_POST['prenom'], $_POST['numTel']);
+    $personne = new Personne(
+        $email = $_POST['email'],
+        $_POST['nom'],
+        $_POST['prenom'],
+        $_POST['numTel']
+    );
     $woofer->creerWoofer($pdo);
     $personne->addPersonne($pdo);
     $utilisateur->creerUtilisateur($pdo);
@@ -103,7 +113,6 @@ function addAtelier($pdo): void
     $statutAtelier     = StatutAtelier::from($_POST['statut']);
     $emailWoofer       = $_POST['email'];
 
-    var_dump($emailWoofer);
     $atelier = new Atelier($idAtelier, $thematiqueAtelier, $typeProduit, $dateAtelier, $prixAtelier, $statutAtelier, $emailWoofer);
     $atelier->creerAtelier($pdo);
     header("Location: ../view/gestAtelier.php");
@@ -118,7 +127,30 @@ function getAllPersonne($pdo)
 function inscrire($pdo): void
 {
     require '../entity/Atelier.php';
-    var_dump(substr($_POST['atelierId'], 0, -1));
-    $inscrit = Atelier::inscrireParticipant($pdo, $_POST['email'], substr($_POST['atelierId'], 0, -1));
+    $inscrit = Atelier::inscrireParticipant($pdo, $_POST['email'], $_POST['atelierId']);
+    header("Location: ../view/gestAtelier.php");
+}
+
+function inscrireNew($pdo): void
+{
+    require '../entity/Atelier.php';
+    require '../entity/Personne.php';
+    $personne = new Personne(
+        $_POST['email'],
+        $_POST['nom'],
+        $_POST['prenom'],
+        $_POST['numTel']
+    );
+    var_dump($_POST['email'], $_POST['atelierId']);
+    $personne->addPersonne($pdo);
+    $pdo->query("INSERT INTO inscrit (emailPersonne) VALUES ('{$_POST['email']}')");
+    $inscrit = Atelier::inscrireParticipant($pdo, $_POST['email'], $_POST['atelierId']);
+    header("Location: ../view/gestAtelier.php");
+}
+
+function cancelAtelier($pdo): void
+{
+    require '../entity/Atelier.php';
+    $atelier = Atelier::annulerAtelier($pdo);
     header("Location: ../view/gestAtelier.php");
 }

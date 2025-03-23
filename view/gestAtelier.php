@@ -6,7 +6,6 @@ require '../controller/AppController.php';
 require '../enum/enumTypeProduit.php';
 require '../enum/statutAtelier.php';
 $pdo = Database::getConn(); // Inclusion de la connexion à la BDD
-
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['email'])) {
     header("Location: loginPage.php");
@@ -18,11 +17,16 @@ if (isset($_POST['create'])) {
 if (isset($_POST['Inscrire'])) {
     inscrire($pdo);
 }
-
+if (isset($_POST['cancel'])) {
+    cancelAtelier($pdo);
+}
+if (isset($_POST['addNew'])) {
+    inscrireNew($pdo);
+}
 // Récupération des ateliers depuis la BDD
+
 $ateliers = getAllAteliers($pdo);
 $personnes = getAllPersonne($pdo);
-var_dump($personnes)
 ?>
 
 <!DOCTYPE html>
@@ -78,11 +82,17 @@ var_dump($personnes)
                                     <button type="button" class="btn btn-sm btn-primary"
                                         data-bs-toggle="modal"
                                         data-bs-target="#inscrirePersonneModal"
-                                        data-atelierid="42">
+                                        data-atelierid="<?= $atelier['idAtelier'] ?>">
                                         Inscrire
                                     </button>
+                                    <button class="btn btn-sm btn-green" data-bs-toggle="modal" data-bs-target="#addPersonneModal" data-atelierid="<?= $atelier['idAtelier'] ?>">Ajouter une nouvelle personne</button>
                                 </td>
-                                <td><button class="btn btn-danger btn-sm">Annuler</button></td>
+                                <td>
+                                    <form method="post">
+                                        <input type="hidden" name="atelierId" value="<?= $atelier['idAtelier'] ?>">
+                                        <button type="submit" name="cancel" class="btn btn-danger btn-sm">Annuler</button>
+                                    </form>
+                                </td>
                             <?php } else { ?>
                                 <td><button class="btn btn-success btn-sm">Voir</button></td>
                         <?php }
@@ -183,7 +193,38 @@ var_dump($personnes)
             </div>
         </div>
     </div>
-
+    <div class="modal fade" id="addPersonneModal" tabindex="-1" aria-labelledby="addPersonneLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPersonneLabel">Ajouter un Personne</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="nom" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="nom" name="nom" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="prenom" class="form-label">Prénom</label>
+                            <input type="text" class="form-control" id="prenom" name="prenom" required>
+                        </div>
+                        <div>
+                            <label for="numTel" class="form-label">Numéro de téléphone</label>
+                            <input type="tel" class="form-control" id="numTel" name="numTel" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <input type="hidden" name="atelierId" id="atelierId" value="">
+                        <button type="submit" name="addNew" class="btn btn-success">Ajouter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Code JavaScript pour mettre à jour le champ caché avec l'id de l'atelier -->
     <script>
         var inscrireModal = document.getElementById('inscrirePersonneModal');
@@ -195,6 +236,19 @@ var_dump($personnes)
             // Met à jour le champ caché dans la modal
             var inputAtelierId = inscrireModal.querySelector('#atelierId');
             inputAtelierId.value = atelierId;
+        });
+    </script>
+    <script>
+        var inscrireModal = document.getElementById('addPersonneModal');
+        inscrireModal.addEventListener('show.bs.modal', function(event) {
+            // Récupère le bouton qui a déclenché l'ouverture de la modal
+            var button = event.relatedTarget;
+            // Récupère l'id de l'atelier depuis l'attribut data-atelierid
+            var atelierId = button.getAttribute('data-atelierid');
+            // Met à jour le champ caché dans la modal
+            var inputAtelierId = inscrireModal.querySelector('#atelierId');
+            inputAtelierId.value = atelierId;
+
         });
     </script>
 

@@ -30,36 +30,41 @@ class Atelier
         $statement->execute();
     }
 
-    public function annulerAtelier($pdo)
+    public static function annulerAtelier($pdo)
     {
-        $pdo->query("UPDATE atelier SET statutAtelier = 'Annulé' WHERE idAtelier = $this->idAtelier");
-        $pdo->execute();
+        $idAtelier = $_POST['atelierId'];
+        $statement = $pdo->prepare("UPDATE atelier SET statutAtelier = 'Annulé' WHERE idAtelier = ?");
+        $statement->bindParam(1, $idAtelier, PDO::PARAM_INT);
+        $statement->execute();
     }
+
 
     public function terminerAtelier($pdo)
     {
-        $pdo->query("UPDATE atelier SET statutAtelier = 'Terminé' WHERE idAtelier = $this->idAtelier");
-        $pdo->execute();
+        $idAtelier = $_POST['atelierId'];
+        $statement = $pdo->prepare("UPDATE atelier SET statutAtelier = 'Terminé' WHERE idAtelier = ?");
+        $statement->bindParam(1, $idAtelier, PDO::PARAM_INT);
+        $statement->execute();
     }
     public function CommencerAtelier($pdo)
     {
-        $pdo->query("UPDATE atelier SET statutAtelier = 'En_cours' WHERE idAtelier = $this->idAtelier");
-        $pdo->execute();
+        $idAtelier = $_POST['atelierId'];
+        $statement = $pdo->prepare("UPDATE atelier SET statutAtelier = 'En_cours' WHERE idAtelier = ?");
+        $statement->bindParam(1, $idAtelier, PDO::PARAM_INT);
+        $statement->execute();
     }
-
-
-
 
     public function modifierDateAtelier($pdo, DateTime $dateAtelier)
     {
-        $pdo->query("UPDATE atelier SET dateAtelier = '$dateAtelier' WHERE idAtelier = $this->idAtelier");
-        $pdo->execute();
+        $idAtelier = $_POST['atelierId'];
+        $statement = $pdo->prepare("UPDATE atelier SET dateAtelier = '$dateAtelier' WHERE idAtelier = ?");
+        $statement->bindParam(1, $idAtelier, PDO::PARAM_INT);
+        $statement->execute();
     }
 
     public function creerAtelier($pdo)
     {
         $typeProduit = $this->typeProduit->value;
-        var_dump($typeProduit);
         $statut = $this->statut->value;
         $statement = $pdo->prepare("INSERT INTO atelier (thematiqueAtelier, typeProduitAtelier, dateAtelier, prixAtelier, statutAtelier, emailWoofer) VALUES (?, ?, ?, ?, ?, ?)");
         $statement->bindParam(1, $this->thematiqueAtelier, PDO::PARAM_STR);
