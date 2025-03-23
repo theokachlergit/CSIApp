@@ -17,7 +17,7 @@ class Personne
         $this->telephone = $telephone;
         $this->adresse = $adresse;
     }
-    
+
     public function getId(): int
     {
         return $this->id;
@@ -45,6 +45,6 @@ class Personne
     public function modifierInformations()
     {
         require '../databases/database.php'; // Inclusion de la connexion à la base de données
-        $this->$email = $_SESSION['email'];
+        $this->email = $_SESSION['email'];
     }
 }
