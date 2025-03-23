@@ -4,7 +4,7 @@ class Database {
 
     private static ?PDO $pdo = null;
 
-    public static function getConn()
+    public static function getConn() : PDO
     {
         if (Database::$pdo == null) {
             try {

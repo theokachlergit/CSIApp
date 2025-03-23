@@ -36,4 +36,19 @@ class Produit
     {
         return $this->stock;
     }
+
+    public static function getAllProducts() : array{
+        // Récupération des produits depuis la BDD
+        try {
+            $stmt = Database::getConn()->query("SELECT * FROM produit");
+            $rawProduits = $stmt->fetchAll();
+        } catch (PDOException $e) {
+            die("Erreur : " . $e->getMessage());
+        }
+        $produits = [];
+        foreach ($rawProduits as $rawProduit){
+            $produits[] = new Produit($rawProduit['idProduit'], $rawProduit['libelleProduit'], $rawProduit['prixUnitaire'], $rawProduit['typeProduit'], $rawProduit['quantiteStock']);
+        }
+        return $produits;
+    }
 }
