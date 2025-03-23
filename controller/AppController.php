@@ -1,7 +1,9 @@
 <?php
 
 function auth(): bool
+
 {
+    var_dump($_POST);
     require_once '../entity/Utilisateur.php';
     $user = new Utilisateur($_POST['email'],  $_POST['password'], "");
     return $user->authentifier();
@@ -22,5 +24,3 @@ function modifyProfil(): void
     var_dump($_POST);
     $user->modifierProfil($_POST['mdpUtilisateur']);
 }
-
-

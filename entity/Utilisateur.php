@@ -15,7 +15,8 @@ class Utilisateur
     }
 
     public function authentifier(): bool
-    {
+    {;
+
         require '../databases/database.php'; // Inclusion de la connexion à la base de données
         try {
             $statement = $pdo->prepare("SELECT email, mdpUtilisateur, roleUtilisateur FROM utilisateur WHERE email = ?");
@@ -27,6 +28,8 @@ class Utilisateur
                 try {
                     $statement = $pdo->prepare("SELECT * FROM woofer WHERE adresseWoofer = ?");
                     $statement->execute([$this->email]);
+                    $statement->bindParam(1, $this->email);
+                    $statement->execute();
                     $woofer = $statement->fetch();
 
                     if ($woofer) {
@@ -50,6 +53,7 @@ class Utilisateur
     {
         require '../databases/database.php'; // Inclusion de la connexion à la base de données
         try {
+            $motDePasse = password_hash($this->motDePasse, PASSWORD_DEFAULT);
             $motDePasse = password_hash($this->motDePasse, PASSWORD_DEFAULT);
             $statement = $pdo->prepare("UPDATE utilisateur SET mdpUtilisateur = ? WHERE email = ?");
             $statement->execute([$this->motDePasse, $this->email]);
