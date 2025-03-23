@@ -4,10 +4,10 @@ class Utilisateur
 {
     private string $email;
     private string $motDePasse;
-    private string $role;
+    private Role $role;
 
 
-    public function __construct(string $email, string $motDePasse, string $role)
+    public function __construct(string $email, string $motDePasse, Role $role)
     {
         $this->email = $email;
         $this->motDePasse = $motDePasse;
@@ -56,6 +56,16 @@ class Utilisateur
             $motDePasseChiffre = password_hash($this->motDePasse, PASSWORD_DEFAULT);
             $statement = $pdo->prepare("UPDATE utilisateur SET mdpUtilisateur = ? WHERE email = ?");
             $statement->execute([$motDePasseChiffre, $this->email]);
+        } catch (PDOException $e) {
+        }
+    }
+
+    public function addUtilisateur(PDO $pdo): void
+    {
+        try {
+            $motDePasseChiffre = password_hash($this->motDePasse, PASSWORD_DEFAULT);
+            $statement = $pdo->prepare("INSERT INTO utilisateur (email, mdpUtilisateur, roleUtilisateur) VALUES (?, ?, ?)");
+            $statement->execute([$this->email, $motDePasseChiffre, $this->role->name]);
         } catch (PDOException $e) {
         }
     }

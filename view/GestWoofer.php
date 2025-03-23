@@ -9,10 +9,15 @@ $stmt = $pdo->query($query);
 $woofers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if (isset($_POST['modify'])) {
     require '../controller/AppController.php';
-    modifyWoofer($pdo);
+    prolongerSejour($pdo);
+}
+if (isset($_POST['add'])) {
+    require '../controller/AppController.php';
+    CreerWoofer($pdo);
+}
+if (isset($_POST['delete'])) {
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -64,11 +69,9 @@ if (isset($_POST['modify'])) {
                                 data-bs-toggle="modal"
                                 data-bs-target="#editWooferModal"
                                 data-email="<?= htmlspecialchars($woofer['email']) ?>"
-                                data-deb="<?= htmlspecialchars($woofer['dateDebSejour']) ?>"
                                 data-fin="<?= htmlspecialchars($woofer['dateFinSejour']) ?>">
                                 Modifier
                             </a>
-                            <a class="btn btn-danger btn-sm">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -93,20 +96,18 @@ if (isset($_POST['modify'])) {
                             <input type="hidden" id="email" name="email" value="valeur affichée">
                         </div>
                         <div class="mb-3">
-                            <label for="dateDebSejour" class="form-label">Date début</label>
-                            <input type="date" class="form-control" name="dateDebSejour" id="dateDebSejour">
+                            <input type="hidden" class="form-control" name="dateFinSejour" id="dateFinSejour" value="valeur affichée">
                         </div>
                         <div class="mb-3">
-                            <label for="dateFinSejour" class="form-label">Date fin</label>
-                            <input type="date" class="form-control" name="dateFinSejour" id="dateFinSejour">
+                            <label for="duree" class="form-label">Prolonger Sejour de (en jour)</label>
+                            <input type="number" class="form-control" name="duree" id="duree">
                         </div>
                         <button type="submit" name="modify" class="btn btn-success">Modifier</button>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 <script>
@@ -115,14 +116,12 @@ if (isset($_POST['modify'])) {
         // Le bouton qui a déclenché l'ouverture de la modal
         var button = event.relatedTarget;
         var email = button.getAttribute('data-email');
-        var dateDeb = button.getAttribute('data-deb');
         var dateFin = button.getAttribute('data-fin');
 
         // Remplir les champs du formulaire dans la modal
         var modal = this;
         modal.querySelector('input[name="email"]').value = email;
         modal.querySelector('input[name="email2"]').value = email;
-        modal.querySelector('input[name="dateDebSejour"]').value = dateDeb;
         modal.querySelector('input[name="dateFinSejour"]').value = dateFin;
     });
 </script>
@@ -136,7 +135,7 @@ if (isset($_POST['modify'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" action="ajouter_woofer.php">
+                <form method="post">
                     <div class="mb-3">
                         <label for="nom" class="form-label">Nom</label>
                         <input type="text" class="form-control" id="nom" name="nom" required>
@@ -162,14 +161,10 @@ if (isset($_POST['modify'])) {
                         <input type="email" class="form-control" id="adresse" name="adresse" required>
                     </div>
                     <div class="mb-3">
-                        <label for="dateDebut" class="form-label">Date Début</label>
-                        <input type="date" class="form-control" id="dateDebut" name="dateDebut" required>
-                    </div>
-                    <div class="mb-3">
                         <label for="dateFin" class="form-label">Date Fin</label>
                         <input type="date" class="form-control" id="dateFin" name="dateFin" required>
                     </div>
-                    <button type="submit" class="btn btn-success">Ajouter</button>
+                    <button type="submit" name="add" class="btn btn-success">Ajouter</button>
                 </form>
             </div>
         </div>

@@ -1,5 +1,5 @@
-<?php enum Role
+<?php enum Role: String
 {
-    case Woofer;
-    case Responsable;
+    case Woofer = 'Woofer';
+    case Responsable = 'Responsable';
 }

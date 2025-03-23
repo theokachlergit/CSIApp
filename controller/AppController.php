@@ -5,7 +5,7 @@ function auth(): bool
 {
     var_dump($_POST);
     require_once '../entity/Utilisateur.php';
-    $user = new Utilisateur($_POST['email'],  $_POST['password'], "");
+    $user = new Utilisateur($_POST['email'],  $_POST['password'], Role::Woofer);
     return $user->authentifier();
 }
 
@@ -42,17 +42,25 @@ function modifyProfilRes($pdo): void
     $user->modifierProfil($pdo);
 }
 
-function modifyWoofer($pdo): void
+function prolongerSejour($pdo): void
 {
     require_once '../entity/Woofer.php';
-    $woofer = new Woofer("", "", new DateTime($_POST['dateDebSejour']), new DateTime($_POST['dateFinSejour']));
-    $woofer->modifierInformations($pdo);
+    var_dump($_POST);
+    $woofer = new Woofer("", "", new DateTime('01-01-01'), new DateTime($_POST['dateFinSejour']));
+    $woofer->modifierInformations($pdo, $_POST['duree']);
 }
 
-function addWoofer($pdo): void
+function CreerWoofer($pdo): void
 {
     require_once '../entity/Woofer.php';
+    require_once '../entity/Utilisateur.php';
+    require_once '../entity/Personne.php';
+    require_once '../enum/Role.php';
     $woofer = new Woofer($_POST['adresseWoofer'], "", new DateTime($_POST['date_debut']), new DateTime($_POST['date_fin']));
-    $utilisateur = new Utilisateur($_POST['email'], "", $_SESSION['role']);  
+    $utilisateur = new Utilisateur($_POST['email'], $_POST['password'], Role::Woofer);
+    $personne = new Personne($_POST['nom'], $_POST['prenom'], $_POST['numTel']);
     $woofer->addWoofer($pdo);
+    $personne->addPersonne($pdo);
+    $utilisateur->addUtilisateur($pdo);
+    header("Location: ../view/gestWoofer.php");
 }

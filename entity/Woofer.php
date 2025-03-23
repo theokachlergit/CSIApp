@@ -15,18 +15,17 @@ class Woofer extends Personne
         $this->date_fin = $date_fin;
     }
 
-    public function modifierInformations($pdo)
+    public function modifierInformations($pdo, int $duree)
     {
         $email = $_POST['email'];
         try {
-            $dateDeb = $this->date_debut->format('Y-m-d');
-            $dateFin = $this->date_fin->format('Y-m-d');
-            $statement = $pdo->prepare("UPDATE woofer SET date_debut = ?, date_fin = ? WHERE email = ?");
-            $statement->bindParam(1, $dateDeb, PDO::PARAM_STR);
-            $statement->bindParam(2, $dateFin, PDO::PARAM_STR);
-            $statement->bindParam(3, $email, PDO::PARAM_STR);
+            $dateFin = $this->date_fin->add(new DateInterval('P' . $duree . 'D'))->format('Y-m-d');
+            $statement = $pdo->prepare("UPDATE woofer SET  dateFinSejour = ? WHERE emailPersonneUtilisateur = ?");
+            $statement->bindParam(1, $dateFin, PDO::PARAM_STR);
+            $statement->bindParam(2, $email, PDO::PARAM_STR);
             $statement->execute();
         } catch (PDOException $e) {
+            var_dump($e);
         }
     }
     public function modifierProfil($pdo)

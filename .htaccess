@@ -8,4 +8,4 @@ RewriteCond %{REQUEST_URI} !^/page-cible\.php$
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 # Rediriger vers "loginPage.php"
-RewriteRule ^.*$ /CSIApp/pageNonTrouve.php [L,R=301]
+RewriteRule ^.*$ /CSIApp/loginPage.php [L,R=301]
