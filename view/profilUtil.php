@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../databases/database.php';
+$pdo = Database::getConn();
 $email = $_SESSION['email'];
 // Récupération des profils$profils depuis la base de données
 $query = "SELECT * FROM Utilisateur WHERE Utilisateur.email = '" . $email . "'";

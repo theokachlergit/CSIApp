@@ -17,7 +17,8 @@ class Utilisateur
     public function authentifier(): bool
     {;
 
-        require '../databases/database.php'; // Inclusion de la connexion à la base de données
+        require '../databases/database.php';
+        $pdo = Database::getConn(); // Inclusion de la connexion à la base de données
         try {
             $statement = Database::getConn()->prepare("SELECT email, mdpUtilisateur, roleUtilisateur FROM utilisateur WHERE email = ?");
             $statement->execute([$this->email]);
@@ -51,7 +52,8 @@ class Utilisateur
 
     public function modifierProfil(): void
     {
-        require '../databases/database.php'; // Inclusion de la connexion à la base de données
+        require '../databases/database.php';
+        $pdo = Database::getConn(); // Inclusion de la connexion à la base de données
         try {
             $motDePasse = password_hash($this->motDePasse, PASSWORD_DEFAULT);
             $motDePasse = password_hash($this->motDePasse, PASSWORD_DEFAULT);

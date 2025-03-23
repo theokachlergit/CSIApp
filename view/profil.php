@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../databases/database.php';
+$pdo = Database::getConn();
 $email = $_SESSION['email'];
 // Récupération des profils$profils depuis la base de données
 $query = "SELECT * FROM Utilisateur INNER JOIN Woofer ON Woofer.emailPersonneUtilisateur = '" . $email . "' INNER JOIN Personne ON personne.email = '" . $email  . "' WHERE Utilisateur.email = '" . $email . "'";

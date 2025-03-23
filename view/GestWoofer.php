@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../databases/database.php';
+$pdo = Database::getConn();
 
 // Récupération des woofers depuis la base de données
 $query = "SELECT * FROM woofer INNER JOIN personne ON woofer.emailPersonneUtilisateur = personne.email";

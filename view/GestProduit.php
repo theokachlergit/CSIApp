@@ -1,6 +1,7 @@
 <?php
 session_start();
-require '../databases/database.php'; // Inclusion de la connexion à la BDD
+require '../databases/database.php';
+$pdo = Database::getConn(); // Inclusion de la connexion à la BDD
 
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['email'])) {

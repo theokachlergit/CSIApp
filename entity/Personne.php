@@ -44,7 +44,8 @@ class Personne
     }
     public function modifierInformations()
     {
-        require '../databases/database.php'; // Inclusion de la connexion à la base de données
+        require '../databases/database.php';
+        $pdo = Database::getConn(); // Inclusion de la connexion à la base de données
         $this->email = $_SESSION['email'];
     }
 }
