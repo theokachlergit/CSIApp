@@ -7,5 +7,5 @@ RewriteCond %{REQUEST_URI} !^/page-cible\.php$
 # Si le fichier ou le dossier demandé n'existe pas
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-# Rediriger vers "loginPage.php"
-RewriteRule ^.*$ /CSIApp/loginPage.php [L,R=301]
+# Rediriger vers "pageNonTrouve.php"
+RewriteRule ^.*$ /CSIApp/pageNonTrouve.php [L,R=301]

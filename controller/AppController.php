@@ -34,7 +34,7 @@ function modifyProfil($pdo): void
     $statement->bindParam(1, $_SESSION['email'], PDO::PARAM_STR);
     $statement->execute();
     $wooferTemp = $statement->fetch();
-    $woofer = new Woofer($_POST['adresseWoofer'], $wooferTemp['photoWoofer'], new DateTime($wooferTemp['dateDebSejour']), new DateTime($wooferTemp['dateFinSejour']));
+    $woofer = new Woofer($_POST['adresseWoofer'], $wooferTemp['photoWoofer'], new DateTime($wooferTemp['dateDebSejour']), new DateTime($wooferTemp['dateFinSejour']), "", "", "", "");
     $personne->modifierProfil($pdo);
     $user->modifierProfil($pdo);
     $woofer->modifierProfil($pdo);
@@ -52,7 +52,7 @@ function prolongerSejour($pdo): void
 {
     require '../entity/Woofer.php';
 
-    $woofer = new Woofer("", "", new DateTime('01-01-01'), new DateTime($_POST['dateFinSejour']));
+    $woofer = new Woofer("", "", new DateTime('01-01-01'), new DateTime($_POST['dateFinSejour']), "", "", "", "");
     $woofer->prolongerSejour($pdo, $_POST['duree']);
 }
 
@@ -60,19 +60,27 @@ function CreerWoofer($pdo): void
 {
     require '../entity/Woofer.php';
     require '../entity/Utilisateur.php';
-    require '../entity/Personne.php';
     require '../enum/Role.php';
-    $woofer = new Woofer($_POST['adresseWoofer'], "", new DateTime($_POST['date_debut']), new DateTime($_POST['date_fin']));
-    $utilisateur = new Utilisateur($_POST['email'], $_POST['password'], Role::Woofer);
     $personne = new Personne(
-        $email = $_POST['email'],
+        $_POST['email'],
         $_POST['nom'],
         $_POST['prenom'],
         $_POST['numTel']
     );
-    $woofer->creerWoofer($pdo);
+    $woofer = new Woofer(
+        $_POST['adresseWoofer'],
+        "",
+        new DateTime($_POST['date_debut']),
+        new DateTime($_POST['date_fin']),
+        $_POST['email'],
+        $_POST['nom'],
+        $_POST['prenom'],
+        $_POST['numTel']
+    );
+    $utilisateur = new Utilisateur($_POST['email'], $_POST['mdpUtilisateur'], Role::Woofer);
     $personne->addPersonne($pdo);
     $utilisateur->creerUtilisateur($pdo);
+    $woofer->creerWoofer($pdo);
     header("Location: ../view/gestWoofer.php");
 }
 function getAllAteliers($pdo)
@@ -127,7 +135,10 @@ function getAllPersonne($pdo)
 function inscrire($pdo): void
 {
     require '../entity/Atelier.php';
-    $inscrit = Atelier::inscrireParticipant($pdo, $_POST['email'], $_POST['atelierId']);
+    require '../enum/statutAtelier.php';
+    require '../enum/enumTypeProduit.php';
+    $atelier = new Atelier($_POST['atelierId'], "", enumTypeProduit::Confiture, "", "", statutAtelier::EnCours, "");
+    $atelier->inscrireParticipant($pdo);
     header("Location: ../view/gestAtelier.php");
 }
 
@@ -144,7 +155,10 @@ function inscrireNew($pdo): void
     var_dump($_POST['email'], $_POST['atelierId']);
     $personne->addPersonne($pdo);
     $pdo->query("INSERT INTO inscrit (emailPersonne) VALUES ('{$_POST['email']}')");
-    $inscrit = Atelier::inscrireParticipant($pdo, $_POST['email'], $_POST['atelierId']);
+    require '../enum/statutAtelier.php';
+    require '../enum/enumTypeProduit.php';
+    $atelier = new Atelier($_POST['atelierId'], "", enumTypeProduit::Confiture, "", "", statutAtelier::EnCours, "");
+    $atelier->inscrireParticipant($pdo);
     header("Location: ../view/gestAtelier.php");
 }
 
@@ -153,4 +167,49 @@ function cancelAtelier($pdo): void
     require '../entity/Atelier.php';
     $atelier = Atelier::annulerAtelier($pdo);
     header("Location: ../view/gestAtelier.php");
+}
+
+function desinscrire($pdo): void
+{
+    var_dump([$_POST['emailPersonne'], $_POST['idAtelier']]);
+    $stmt = $pdo->prepare("DELETE FROM participe WHERE emailInscrit = ? AND idAtelier = ?");
+    $stmt->execute([$_POST['emailPersonne'], $_POST['idAtelier']]);
+    // header("Location: ../view/inscritAtelier.php?atelierId={$_POST['idAtelier']}");
+}
+function annulerAtelier($pdo): void
+{
+    require '../entity/Atelier.php';
+    require '../enum/statutAtelier.php';
+    require '../enum/enumTypeProduit.php';
+    $atelier = new Atelier($_POST['atelierId'], "", enumTypeProduit::Confiture, "", "", statutAtelier::EnCours, "");
+    $atelier->annulerAtelier($pdo);
+}
+function CommencerAtelier($pdo): void
+{
+    require '../entity/Atelier.php';
+    require '../enum/statutAtelier.php';
+    require '../enum/enumTypeProduit.php';
+    $atelier = new Atelier($_POST['atelierId'], "", enumTypeProduit::Confiture, "", "", statutAtelier::EnCours, "");
+    $atelier->CommencerAtelier($pdo);
+}
+
+function terminerAtelier($pdo): void
+{
+    require '../entity/Atelier.php';
+    var_dump($_POST);
+    require '../enum/statutAtelier.php';
+    require '../enum/enumTypeProduit.php';
+    $atelier = new Atelier($_POST['atelierId'], "", enumTypeProduit::Confiture, "", "", statutAtelier::EnCours, "");
+    $atelier->terminerAtelier($pdo);
+}
+
+function changerDateAtelier($pdo): void
+{
+    require '../entity/Atelier.php';
+    require '../enum/statutAtelier.php';
+    require '../enum/enumTypeProduit.php';
+    var_dump($_POST);
+    $date = DateTime::createFromFormat('Y-m-d', $_POST['nouvelleDate']);
+    $atelier = new Atelier($_POST['atelierId'], "", enumTypeProduit::Confiture, "", "", statutAtelier::EnCours, "");
+    $atelier->modifierDateAtelier($pdo, $date);
 }
