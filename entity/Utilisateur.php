@@ -19,14 +19,14 @@ class Utilisateur
 
         require '../databases/database.php'; // Inclusion de la connexion à la base de données
         try {
-            $statement = $pdo->prepare("SELECT email, mdpUtilisateur, roleUtilisateur FROM utilisateur WHERE email = ?");
+            $statement = Database::getConn()->prepare("SELECT email, mdpUtilisateur, roleUtilisateur FROM utilisateur WHERE email = ?");
             $statement->execute([$this->email]);
             $user = $statement->fetch();
             if ($user && password_verify($this->motDePasse, $user['mdpUtilisateur'])) {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $user['roleUtilisateur'];
                 try {
-                    $statement = $pdo->prepare("SELECT * FROM woofer WHERE adresseWoofer = ?");
+                    $statement = Database::getConn()->prepare("SELECT * FROM woofer WHERE adresseWoofer = ?");
                     $statement->execute([$this->email]);
                     $statement->bindParam(1, $this->email);
                     $statement->execute();
@@ -55,7 +55,7 @@ class Utilisateur
         try {
             $motDePasse = password_hash($this->motDePasse, PASSWORD_DEFAULT);
             $motDePasse = password_hash($this->motDePasse, PASSWORD_DEFAULT);
-            $statement = $pdo->prepare("UPDATE utilisateur SET mdpUtilisateur = ? WHERE email = ?");
+            $statement = Database::getConn()->prepare("UPDATE utilisateur SET mdpUtilisateur = ? WHERE email = ?");
             $statement->execute([$this->motDePasse, $this->email]);
         } catch (PDOException $e) {
         }

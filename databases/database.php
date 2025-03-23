@@ -2,7 +2,7 @@
 
 class Database {
 
-    private static PDO $pdo;
+    private static ?PDO $pdo = null;
 
     public static function getConn()
     {
