@@ -1,4 +1,5 @@
-<?php enum enumTypeProduit: String
+<?php
+enum enumTypeProduit: String
 {
     case  Fromage = "Fromage";
     case Oeuf = "Oeuf";
