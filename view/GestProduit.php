@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php foreach (Produit::getAllProducts() as $produit): ?>
                     <tr>
                         <td><?= htmlspecialchars($produit->getNom()) ?></td>
-                        <td><?= htmlspecialchars($produit->getPrix()) ?></td>
+                        <td><?= htmlspecialchars($produit->getPrixUnitaire()) ?></td>
                         <td><?= htmlspecialchars($produit->getType()->value) ?></td>
                         <td>
                             <button type="button" class="btn btn-blue" data-bs-toggle="modal" data-bs-target="#modifier-<?= $produit->getId() ?>">
@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                                                 <div class="mb-3">
                                                     <label for="nouveauPrix-<?= $produit->getId() ?>" class="form-label">Prix Unitaire</label>
-                                                    <input type="number" class="form-control" id="nouveauPrix-<?= $produit->getId() ?>" name="nouveauPrix" value="<?= htmlspecialchars($produit->getPrix()) ?>">
+                                                    <input type="number" class="form-control" id="nouveauPrix-<?= $produit->getId() ?>" name="nouveauPrix" value="<?= htmlspecialchars($produit->getPrixUnitaire()) ?>">
                                                 </div>
 
                                                 <div class="mb-3">

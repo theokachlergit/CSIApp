@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 <body>
 <?php
 if (isset($_SESSION['role'])) {
-    if ($_SESSION['role'] != 'Administrateur') {
+    if ($_SESSION['role'] != 'Responsable') {
         require 'nav-bar.html';
     } else {
         require 'nav-bar-admin.html';

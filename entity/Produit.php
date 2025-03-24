@@ -1,4 +1,7 @@
 <?php
+
+
+require '../enum/enumTypeProduit.php';
 class Produit
 {
     private int $id;
@@ -43,7 +46,7 @@ class Produit
                 Database::getConn()->beginTransaction();
             }
             $produit = Produit::getProductById($id);
-            if ($qte <= $produit->stock) {
+            if ($qte <= $produit->quantiteStock) {
                 $stmt = Database::getConn()->prepare("UPDATE produit SET quantiteStock = $qte WHERE idProduit = $id");
                 $stmt->execute();
                 Database::getConn()->commit();
@@ -111,7 +114,7 @@ class Produit
             $stmt->execute();
             $rawProduit = $stmt->fetch();
 
-            return new Produit($rawProduit['idProduit'], $rawProduit['libelleProduit'], $rawProduit['prixUnitaire'], $rawProduit['typeProduit'], $rawProduit['quantiteStock']);
+            return new Produit($rawProduit['idProduit'], $rawProduit['libelleProduit'], $rawProduit['prixUnitaire'],enumTypeProduit::from($rawProduit['typeProduit']), $rawProduit['quantiteStock']);
 
         }catch (PDOException $e){
             die("Erreur : " . $e->getMessage());

@@ -65,7 +65,7 @@ $personnes = getAllPersonne($pdo);
                         if ($_SESSION['role'] == 'Responsable') {
                             echo '<th>Gérer Session</th> <th>Annulé</th>';
                         } else {
-                            echo '<th>Voir</th>';
+                            echo '<th>Gérer</th>';
                         }
                     }
                     ?>
@@ -99,7 +99,7 @@ $personnes = getAllPersonne($pdo);
                                 </td>
                             <?php } else { ?>
                                 <td>
-                                    <a href="inscritAtelier.php?atelierId=<?= $atelier['idAtelier'] ?>" class="btn btn-green btn-sm">Voir</a>
+                                    <a href="inscritAtelier.php?atelierId=<?= $atelier['idAtelier'] ?>" class="btn btn-green btn-sm">Gérer</a>
                                 </td>
                         <?php }
                         } ?>
@@ -150,11 +150,7 @@ $personnes = getAllPersonne($pdo);
                             </div>
                             <div class="mb-3">
                                 <label for="statut" class="form-label">Statut</label>
-                                <select class="form-select" name="statut" id="statut" required>
-                                    <?php foreach (StatutAtelier::cases() as $statut): ?>
-                                        <option value="<?= $statut->value ?>"><?= $statut->value ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                                <input name="statut" type="hidden" id="statut" value="A_Venir">
                             </div>
                             <div class="mb-3">
                                 <label for="emailWoofer" class="form-label">Email du woofer</label>

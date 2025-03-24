@@ -62,7 +62,7 @@ if (isset($_SESSION['role'])) {
         <?php foreach (Produit::getAllProducts() as $produit): ?>
             <tr>
                 <td><?= htmlspecialchars($produit->getNom()) ?></td>
-                <td><?= htmlspecialchars($produit->getPrix()) ?></td>
+                <td><?= htmlspecialchars($produit->getPrixUnitaire()) ?></td>
                 <td><?= htmlspecialchars($produit->getType()->value) ?></td>
                 <td><input type="number" name="maj[<?= $produit->getId() ?>]" value="<?= htmlspecialchars($produit->getQuantiteStock()) ?>"></td>
             </tr>

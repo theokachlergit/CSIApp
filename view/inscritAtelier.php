@@ -101,6 +101,12 @@ if (isset($_POST['cancel'])) {
                     <p>Aucun inscrit trouvé pour cet atelier. Statut actuelle <?php echo $statut ?></p>
                     </p>
                 <?php } ?>
+                <form method="post">
+                    <input type="hidden" name="atelierId" value="<?= $idAtelier ?>">
+                    <button><a href="gestAtelier.php" class="btn btn-green">Retour</a></button>
+                    <button type="submit" name="terminer" class="btn btn-success btn-sm">Terminer</button>
+                    <button type="submit" name="Commencer" class="btn btn-warning btn-sm">Commencer</button>
+                </form>
             </div>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <?php
