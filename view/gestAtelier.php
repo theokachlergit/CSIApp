@@ -108,66 +108,73 @@ $personnes = getAllPersonne($pdo);
             </tbody>
         </table>
         <!-- Bouton pour ouvrir la modal de création d'atelier -->
-        <button class="btn btn-green w-100" data-bs-toggle="modal" data-bs-target="#addAtelierModal">
-            Ajouter un Atelier
-        </button>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Responsable') {
+        ?>
+            <button class="btn btn-green w-100" data-bs-toggle="modal" data-bs-target="#addAtelierModal">
+                Ajouter un Atelier
+            </button>
+        <?php
+        } ?>
     </div>
-
-    <!-- Modal de création d'atelier -->
-    <div class="modal fade" id="addAtelierModal" tabindex="-1" aria-labelledby="addAtelierModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addAtelierModalLabel">Créer un nouvel atelier</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="post">
-                        <div class="mb-3">
-                            <label for="thematiqueAtelier" class="form-label">Thématique</label>
-                            <input type="text" class="form-control" name="thematiqueAtelier" id="thematiqueAtelier" placeholder="Ex : Jardinage" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="typeProduit" class="form-label">Type de produit</label>
-                            <select class="form-select" name="typeProduit" id="typeProduit" required>
-                                <?php foreach (EnumTypeProduit::cases() as $type): ?>
-                                    <option value="<?= $type->value ?>"><?= $type->value ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="dateAtelier" class="form-label">Date de l'atelier</label>
-                            <input type="date" class="form-control" name="dateAtelier" id="dateAtelier" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="prixAtelier" class="form-label">Prix</label>
-                            <input type="number" class="form-control" name="prixAtelier" id="prixAtelier" placeholder="Ex : 50.00" step="0.01" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="statut" class="form-label">Statut</label>
-                            <select class="form-select" name="statut" id="statut" required>
-                                <?php foreach (StatutAtelier::cases() as $statut): ?>
-                                    <option value="<?= $statut->value ?>"><?= $statut->value ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="emailWoofer" class="form-label">Email du woofer</label>
-                            <select class="form-select" name="email" id="emailWoofer" required>
-                                <?php foreach (getAllWoofers($pdo) as $woofer): ?>
-                                    <option value="<?= $woofer['emailPersonneUtilisateur'] ?>"><?= $woofer['emailPersonneUtilisateur'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                            <button type="submit" name="create" class="btn btn-green">Créer l'atelier</button>
-                        </div>
-                    </form>
+    <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Responsable') {
+    ?>
+        <!-- Modal de création d'atelier -->
+        <div class="modal fade" id="addAtelierModal" tabindex="-1" aria-labelledby="addAtelierModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addAtelierModalLabel">Créer un nouvel atelier</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post">
+                            <div class="mb-3">
+                                <label for="thematiqueAtelier" class="form-label">Thématique</label>
+                                <input type="text" class="form-control" name="thematiqueAtelier" id="thematiqueAtelier" placeholder="Ex : Jardinage" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="typeProduit" class="form-label">Type de produit</label>
+                                <select class="form-select" name="typeProduit" id="typeProduit" required>
+                                    <?php foreach (EnumTypeProduit::cases() as $type): ?>
+                                        <option value="<?= $type->value ?>"><?= $type->value ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dateAtelier" class="form-label">Date de l'atelier</label>
+                                <input type="date" class="form-control" name="dateAtelier" id="dateAtelier" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="prixAtelier" class="form-label">Prix</label>
+                                <input type="number" class="form-control" name="prixAtelier" id="prixAtelier" placeholder="Ex : 50.00" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="statut" class="form-label">Statut</label>
+                                <select class="form-select" name="statut" id="statut" required>
+                                    <?php foreach (StatutAtelier::cases() as $statut): ?>
+                                        <option value="<?= $statut->value ?>"><?= $statut->value ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="emailWoofer" class="form-label">Email du woofer</label>
+                                <select class="form-select" name="email" id="emailWoofer" required>
+                                    <?php foreach (getAllWoofers($pdo) as $woofer): ?>
+                                        <option value="<?= $woofer['emailPersonneUtilisateur'] ?>"><?= $woofer['emailPersonneUtilisateur'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" name="create" class="btn btn-green">Créer l'atelier</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    <?php
+    } ?>
 
     <!-- Modal d'inscription d'une personne -->
     <div class="modal fade" id="inscrirePersonneModal" tabindex="-1" aria-labelledby="inscrirePersonneModalLabel" aria-hidden="true">
