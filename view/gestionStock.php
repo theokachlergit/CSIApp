@@ -2,8 +2,6 @@
 session_start();
 require '../databases/database.php'; // Inclusion de la connexion à la BDD
 require "../entity/Produit.php";
-require "../enum/enumTypeProduit.php";
-
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['email'])) {
     header("Location: loginPage.php");
@@ -47,7 +45,6 @@ if (isset($_SESSION['role'])) {
 
 <div class="container mt-4">
     <h2 class="mb-3">Gestion des Stocks</h2>
-    <input type="text" class="form-control mb-3" placeholder="Rechercher un produit...">
     <form method="post">
     <table class="table table-bordered">
         <thead>

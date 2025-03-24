@@ -2,7 +2,6 @@
 session_start();
 require '../databases/database.php';
 require '../entity/produit.php';
-require '../enum/enumTypeProduit.php';
 
 if (!isset($_SESSION['email'])) {
     header("Location: loginPage.php");

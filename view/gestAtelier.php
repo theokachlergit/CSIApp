@@ -149,7 +149,7 @@ $personnes = getAllPersonne($pdo);
                                 <input type="number" class="form-control" name="prixAtelier" id="prixAtelier" placeholder="Ex : 50.00" step="0.01" required>
                             </div>
                             <div class="mb-3">
-                                <label for="statut" class="form-label">Statut</label>
+                                <!--<label for="statut" class="form-label">Statut</label>-->
                                 <input name="statut" type="hidden" id="statut" value="A_Venir">
                             </div>
                             <div class="mb-3">

@@ -98,7 +98,7 @@ if (isset($_POST['cancel'])) {
                     </table>
                     Statut actuelle <?php echo $statut ?>
                 <?php } else { ?>
-                    <p>Aucun inscrit trouvé pour cet atelier. Statut actuelle <?php echo $statut ?></p>
+                    <p>Aucun inscrit trouvé pour cet atelier. Statut actuel <?php echo $statut ?></p>
                     </p>
                 <?php } ?>
                 <form method="post">

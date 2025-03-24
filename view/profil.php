@@ -55,7 +55,7 @@ if (isset($_POST['modify'])) {
                         <td><?= htmlspecialchars($profil['email']) ?></td>
                         <td><?= htmlspecialchars($profil['numTel']) ?></td>
                         <td>
-                            <a class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#editWooferModal">Modifier</a>
+                            <a class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#editWooferModal">Modifier mot de passe</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -72,32 +72,10 @@ if (isset($_POST['modify'])) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post">
-                        <div class="mb-3">
-                            <label for="nom" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="nom" name="nom" required value="<?= $profil['nom'] ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label for="prenom" class="form-label">Prénom</label>
-                            <input type="text" class="form-control" id="prenom" name="prenom" required value="<?= $profil['prenom'] ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label for="numTel" class="form-label">Numéro de téléphone</label>
-                            <input type="tel" class="form-control" id="numTel" name="numTel" required value="<?= $profil['numTel'] ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" disabled=true class="form-control" id="email" name="email" required value="<?= $profil['email'] ?>">
-                        </div>
                         <!-- Champ pour le mot de passe (mdpUtilisateur) -->
                         <div class="mb-3">
-                            <label for="mdpUtilisateur" class="form-label">Mot de passe</label>
+                            <label for="mdpUtilisateur" class="form-label">Nouveau mot de passe</label>
                             <input type="password" class="form-control" id="mdpUtilisateur" name="mdpUtilisateur" required>
-                        </div>
-                        <!-- Champ pour l'adresse (adresseWoofer) -->
-                        <div class="mb-3">
-                            <label for="adresseWoofer" class="form-label">Adresse</label>
-                            <input type="text" class="form-control" id="adresseWoofer" name="adresseWoofer" required value="<?= $profil['adresseWoofer'] ?>">
                         </div>
                         <button type="submit" name="modify" class="btn btn-success">Modifier</button>
                     </form>
