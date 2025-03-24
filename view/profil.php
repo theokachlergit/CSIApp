@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../databases/database.php';
+$pdo = Database::getConn();
 $email = $_SESSION['email'];
 // Récupération des profils$profils depuis la base de données
 $query = "SELECT * FROM Utilisateur INNER JOIN Woofer ON Woofer.emailPersonneUtilisateur = '" . $email . "' INNER JOIN Personne ON personne.email = '" . $email  . "' WHERE Utilisateur.email = '" . $email . "'";
@@ -8,7 +9,7 @@ $stmt = $pdo->query($query);
 $profils = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if (isset($_POST['modify'])) {
     require '../controller/AppController.php';
-    modifyProfil();
+    modifyProfil($pdo);
 }
 ?>
 <!DOCTYPE html>
@@ -17,69 +18,49 @@ if (isset($_POST['modify'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Woofers</title>
-    <link rel="stylesheet" href="css.css">
+    <title>Gestion du profil</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        .header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .btn-green {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .btn-green:hover {
-            background-color: #388E3C;
-        }
-    </style>
+    <link rel="stylesheet" href="css.css">
 </head>
 
 <body>
 
     <?php
     if (isset($_SESSION['role'])) {
-        if ($_SESSION['role'] != 'Administrateur') {
+        if ($_SESSION['role'] != 'Responsable') {
             require 'nav-bar.html';
         } else {
             require 'nav-bar-admin.html';
         }
     }
     ?>
+    <div class="container-xxl">
 
-    <h2 class="mt-4">Gestion de votre profils</h2>
-    <table class="table table-bordered">
-        <thead class="table-success">
-            <tr>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Email</th>
-                <th>Num Tel</th>
-                <th>Date Début</th>
-                <th>Date Fin</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($profils as $profil): ?>
+        <h2 class="mt-4">Gestion de votre profils</h2>
+        <table class="table table-bordered">
+            <thead class="table-success">
                 <tr>
-                    <td><?= htmlspecialchars($profil['nom']) ?></td>
-                    <td><?= htmlspecialchars($profil['prenom']) ?></td>
-                    <td><?= htmlspecialchars($profil['email']) ?></td>
-                    <td><?= htmlspecialchars($profil['numTel']) ?></td>
-                    <td><?= htmlspecialchars($profil['dateDebSejour']) ?></td>
-                    <td><?= htmlspecialchars($profil['dateFinSejour']) ?></td>
-                    <td>
-                        <a class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#editWooferModal">Modifier</a>
-                    </td>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Num Tel</th>
+                    <th>Actions</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($profils as $profil): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($profil['nom']) ?></td>
+                        <td><?= htmlspecialchars($profil['prenom']) ?></td>
+                        <td><?= htmlspecialchars($profil['email']) ?></td>
+                        <td><?= htmlspecialchars($profil['numTel']) ?></td>
+                        <td>
+                            <a class="btn btn-green btn-sm" data-bs-toggle="modal" data-bs-target="#editWooferModal">Modifier</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 
     <!-- Modal de modification -->
@@ -123,6 +104,7 @@ if (isset($_POST['modify'])) {
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

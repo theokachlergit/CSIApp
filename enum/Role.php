@@ -1,4 +1,5 @@
-<?php enum Role {
-    case Woofer;
-    case Administrateur;
+<?php enum Role: String
+{
+    case Woofer = 'Woofer';
+    case Responsable = 'Responsable';
 }

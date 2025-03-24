@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../databases/database.php';
+$pdo = Database::getConn();
 $email = $_SESSION['email'];
 // Récupération des profils$profils depuis la base de données
 $query = "SELECT * FROM Utilisateur WHERE Utilisateur.email = '" . $email . "'";
@@ -8,7 +9,7 @@ $stmt = $pdo->query($query);
 $profils = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if (isset($_POST['modify'])) {
     require '../controller/AppController.php';
-    modifyProfil();
+    modifyProfilRes($pdo);
 }
 ?>
 <!DOCTYPE html>
@@ -17,27 +18,24 @@ if (isset($_POST['modify'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Woofers</title>
+    <title>Gestion du profil</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css.css">
 </head>
 
 <body>
 
-    <div class="header">
-        <h1>🌿 ECO-FERME 🌿</h1>
-    </div>
-
-    <div class="container mt-4">
-        <?php
-        if (isset($_SESSION['role'])) {
-            if ($_SESSION['role'] != 'Administrateur') {
-                require 'nav-bar.html';
-            } else {
-                require 'nav-bar-admin.html';
-            }
+    <?php
+    if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] != 'Responsable') {
+            require 'nav-bar.html';
+        } else {
+            require 'nav-bar-admin.html';
         }
-        ?>
+    }
+    ?>
+    <div class="container-xxl
+">
 
         <h2 class="mt-4">Gestion de votre profils</h2>
         <table class="table table-bordered">
@@ -72,10 +70,14 @@ if (isset($_POST['modify'])) {
                     <form method="post">
                         <!-- Champ pour le mot de passe (mdpUtilisateur) -->
                         <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" disabled=true class="form-control" id="email" name="email" required value="<?= $profil['email'] ?>">
+                        </div>
+                        <div class="mb-3">
                             <label for="mdpUtilisateur" class="form-label">Mot de passe</label>
                             <input type="password" class="form-control" id="mdpUtilisateur" name="mdpUtilisateur" required>
                         </div>
-                        <!-- Champ pour l'adresse (adresseWoofer) -->
+                        <button type="submit" name="modify" class="btn btn-success">Modifier</button>
                     </form>
                 </div>
             </div>

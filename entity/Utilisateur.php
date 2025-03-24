@@ -4,10 +4,10 @@ class Utilisateur
 {
     private string $email;
     private string $motDePasse;
-    private string $role;
+    private Role $role;
 
 
-    public function __construct(string $email, string $motDePasse, string $role)
+    public function __construct(string $email, string $motDePasse, Role $role)
     {
         $this->email = $email;
         $this->motDePasse = $motDePasse;
@@ -17,16 +17,17 @@ class Utilisateur
     public function authentifier(): bool
     {;
 
-        require '../databases/database.php'; // Inclusion de la connexion à la base de données
+        require '../databases/database.php';
+        $pdo = Database::getConn(); // Inclusion de la connexion à la base de données
         try {
-            $statement = Database::getConn()->prepare("SELECT email, mdpUtilisateur, roleUtilisateur FROM utilisateur WHERE email = ?");
+            $statement = $pdo->prepare("SELECT email, mdpUtilisateur, roleUtilisateur FROM utilisateur WHERE email = ?");
             $statement->execute([$this->email]);
             $user = $statement->fetch();
             if ($user && password_verify($this->motDePasse, $user['mdpUtilisateur'])) {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $user['roleUtilisateur'];
                 try {
-                    $statement = Database::getConn()->prepare("SELECT * FROM woofer WHERE adresseWoofer = ?");
+                    $statement = $pdo->prepare("SELECT * FROM woofer WHERE adresseWoofer = ?");
                     $statement->execute([$this->email]);
                     $statement->bindParam(1, $this->email);
                     $statement->execute();
@@ -49,14 +50,22 @@ class Utilisateur
         return false;
     }
 
-    public function modifierProfil(): void
+    public function modifierProfil(PDO $pdo): void
     {
-        require '../databases/database.php'; // Inclusion de la connexion à la base de données
         try {
-            $motDePasse = password_hash($this->motDePasse, PASSWORD_DEFAULT);
-            $motDePasse = password_hash($this->motDePasse, PASSWORD_DEFAULT);
-            $statement = Database::getConn()->prepare("UPDATE utilisateur SET mdpUtilisateur = ? WHERE email = ?");
-            $statement->execute([$this->motDePasse, $this->email]);
+            $motDePasseChiffre = password_hash($this->motDePasse, PASSWORD_DEFAULT);
+            $statement = $pdo->prepare("UPDATE utilisateur SET mdpUtilisateur = ? WHERE email = ?");
+            $statement->execute([$motDePasseChiffre, $this->email]);
+        } catch (PDOException $e) {
+        }
+    }
+
+    public function creerUtilisateur(PDO $pdo): void
+    {
+        try {
+            $motDePasseChiffre = password_hash($this->motDePasse, PASSWORD_DEFAULT);
+            $statement = $pdo->prepare("INSERT INTO utilisateur (email, mdpUtilisateur, roleUtilisateur) VALUES (?, ?, ?)");
+            $statement->execute([$this->email, $motDePasseChiffre, $this->role->name]);
         } catch (PDOException $e) {
         }
     }

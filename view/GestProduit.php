@@ -1,6 +1,7 @@
 <?php
 session_start();
-require '../databases/database.php'; // Inclusion de la connexion à la BDD
+require '../databases/database.php';
+$pdo = Database::getConn(); // Inclusion de la connexion à la BDD
 
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['email'])) {
@@ -9,7 +10,7 @@ if (!isset($_SESSION['email'])) {
 }
 
 if (isset($_SESSION['role'])) {
-    if ($_SESSION['role'] != 'Administrateur') {
+    if ($_SESSION['role'] != 'Responsable') {
         header("Location: ../view/GestProduit.php");
     }
 }
@@ -38,7 +39,7 @@ try {
 <body>
     <?php
     if (isset($_SESSION['role'])) {
-        if ($_SESSION['role'] != 'Administrateur') {
+        if ($_SESSION['role'] != 'Responsable') {
             require 'nav-bar.html';
         } else {
             require 'nav-bar-admin.html';
@@ -46,7 +47,8 @@ try {
     }
     ?>
 
-    <div class="container mt-4">
+    <div class="container-xxl
+">
         <h2 class="mb-3">Gestion des Produits</h2>
         <input type="text" class="form-control mb-3" placeholder="Rechercher un produit...">
         <table class="table table-bordered">

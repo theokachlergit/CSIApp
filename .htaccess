@@ -1,0 +1,11 @@
+RewriteEngine On
+RewriteBase /
+# Exclure la page cible de la redirection pour éviter une boucle infinie
+RewriteCond %{REQUEST_URI} !^/page-cible\.php$
+
+
+# Si le fichier ou le dossier demandé n'existe pas
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# Rediriger vers "pageNonTrouve.php"
+RewriteRule ^.*$ /CSIApp/pageNonTrouve.php [L,R=301]
