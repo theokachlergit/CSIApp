@@ -20,13 +20,22 @@ class Woofer extends Personne
     {
         $email = $_POST['email'];
         try {
-            $dateFin = $this->date_fin->add(new DateInterval('P' . $duree . 'D'))->format('Y-m-d');
+            if ($duree < 0) {
+                $duree = $duree * -1;
+                var_dump($duree);
+                $dateFin = $this->date_fin->sub(new DateInterval('P' . $duree . 'D'))->format('Y-m-d');
+            } else {
+                var_dump($duree);
+                $dateFin = $this->date_fin->add(new DateInterval('P' . $duree . 'D'))->format('Y-m-d');
+            }
             $statement = $pdo->prepare("UPDATE woofer SET  dateFinSejour = ? WHERE emailPersonneUtilisateur = ?");
             $statement->bindParam(1, $dateFin, PDO::PARAM_STR);
             $statement->bindParam(2, $email, PDO::PARAM_STR);
             $statement->execute();
         } catch (PDOException $e) {
             var_dump($e);
+        } catch (Exception $e) {
+            // var_dump($e);
         }
     }
     public function modifierProfil($pdo)
