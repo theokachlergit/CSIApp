@@ -4,16 +4,16 @@ class Produit
     private int $id;
     private string $nom;
     private float $prix;
-    private string $categorie;
-    private int $stock;
+    private enumTypeProduit $type;
+    private int $quantiteStock;
 
-    public function __construct(int $id, string $nom, float $prix, string $categorie, int $stock)
+    public function __construct(int $id, string $nom, float $prix, enumTypeProduit $type, int $stock)
     {
         $this->id = $id;
         $this->nom = $nom;
         $this->prix = $prix;
-        $this->categorie = $categorie;
-        $this->stock = $stock;
+        $this->type = $type;
+        $this->quantiteStock = $stock;
     }
 
     public function getId(): int
@@ -28,17 +28,51 @@ class Produit
     {
         return $this->prix;
     }
-    public function getCategorie(): string
+    public function getType(): enumTypeProduit
     {
-        return $this->categorie;
+        return $this->type;
     }
-    public function getStock(): int
+    public function getQuantiteStock(): int
     {
-        return $this->stock;
+        return $this->quantiteStock;
+    }
+
+    public static function mettreAJourStock(int $id, int $qte){
+        try{
+            $stmt = Database::getConn()->prepare("UPDATE produit SET quantiteStock = $qte WHERE idProduit = $id");
+            $stmt->execute();
+        }catch (PDOException $e){
+            die("Erreur : " . $e->getMessage());
+        }
+    }
+    public static function mettreAJourNom(int $id, string $nom){
+        try{
+            $stmt = Database::getConn()->prepare("UPDATE produit SET libelleProduit = '$nom' WHERE idProduit = $id");
+            $stmt->execute();
+        }catch (PDOException $e){
+            die("Erreur : " . $e->getMessage());
+        }
+    }
+
+    public static function mettreAJourPrix(int $id, float $prix){
+        try{
+            $stmt = Database::getConn()->prepare("UPDATE produit SET prixUnitaire = $prix WHERE idProduit = $id");
+            $stmt->execute();
+        }catch (PDOException $e){
+            die("Erreur : " . $e->getMessage());
+        }
+    }
+
+    public static function mettreAJourType(int $id, string $type){
+        try{
+            $stmt = Database::getConn()->prepare("UPDATE produit SET typeProduit = '$type' WHERE idProduit = $id");
+            $stmt->execute();
+        }catch (PDOException $e){
+            die("Erreur : " . $e->getMessage());
+        }
     }
 
     public static function getAllProducts() : array{
-        // Récupération des produits depuis la BDD
         try {
             $stmt = Database::getConn()->query("SELECT * FROM produit");
             $rawProduits = $stmt->fetchAll();
@@ -47,8 +81,20 @@ class Produit
         }
         $produits = [];
         foreach ($rawProduits as $rawProduit){
-            $produits[] = new Produit($rawProduit['idProduit'], $rawProduit['libelleProduit'], $rawProduit['prixUnitaire'], $rawProduit['typeProduit'], $rawProduit['quantiteStock']);
+            $produits[] = new Produit($rawProduit['idProduit'], $rawProduit['libelleProduit'], $rawProduit['prixUnitaire'], enumTypeProduit::from($rawProduit['typeProduit']), $rawProduit['quantiteStock']);
         }
         return $produits;
     }
+
+    public static function ajouterProduit($nom, $prix, $type) {
+        try {
+            Database::getConn()->query("INSERT INTO produit (libelleProduit, prixUnitaire, typeProduit) VALUES ('$nom', $prix, '$type')");
+        }catch (PDOException $e){
+            die("Erreur : " . $e->getMessage());
+        }
+
+    }
+
+
+
 }

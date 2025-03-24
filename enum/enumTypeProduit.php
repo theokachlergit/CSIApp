@@ -1,10 +1,10 @@
-<?php enum enumTypeProduit
+<?php enum enumTypeProduit: string
 {
-    case  Fromage;
-    case Oeuf;
-    case Lait;
-    case Legume;
-    case Confiture;
+    case  Fromage = "Fromage";
+    case Oeuf = "Oeuf";
+    case Lait = "Lait";
+    case Legume = "Legume";
+    case Confiture = "Confiture";
 
 
     private function StringOfProduit() {
@@ -20,7 +20,7 @@
                 break;
             case $this->Legume :
                 return "Legume";
-                break;    
+                break;
             case $this->Confiture :
                 return "Confiture";
                 break;
