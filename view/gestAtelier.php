@@ -1,5 +1,6 @@
 <?php
 session_start();
+require '../entity/Atelier.php';
 require '../databases/database.php';
 require '../controller/AppController.php';
 require '../enum/enumTypeProduit.php';
@@ -26,7 +27,11 @@ if (isset($_POST['addNew'])) {
 }
 
 // Récupération des ateliers depuis la BDD
-$ateliers = getAllAteliers($pdo);
+if ($_SESSION['role'] === 'Responsable') {
+    $ateliers = getAllAteliers($pdo);
+}else {
+    $ateliers = Atelier::getAteliersByEmail(filter_var($_SESSION['email'], FILTER_SANITIZE_EMAIL));
+}
 $personnes = getAllPersonne($pdo);
 ?>
 

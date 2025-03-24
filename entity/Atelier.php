@@ -74,4 +74,15 @@ class Atelier
         $statement->bindParam(6, $this->emailWoofer, PDO::PARAM_STR);
         $statement->execute();
     }
+
+    public static function getAteliersByEmail($email){
+        try{
+            $stmt = Database::getConn()->prepare("SELECT * FROM atelier WHERE emailWoofer = '$email'");
+            $stmt->execute();
+            $ateliers = $stmt->fetchAll();
+            return $ateliers;
+        }catch (PDOException $e){
+            die("Erreur : " . $e->getMessage());
+        }
+    }
 }
