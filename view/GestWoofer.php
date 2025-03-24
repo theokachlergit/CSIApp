@@ -73,6 +73,9 @@ if (isset($_POST['add'])) {
                                 data-fin="<?= htmlspecialchars($woofer['dateFinSejour']) ?>">
                                 Modifier
                             </a>
+                            <button type="button" class="btn btn-primary">
+                                <a style="color: white;" href="gestFormation.php?email=<?= $woofer['email'] ?>">Formation</a>
+                            </button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
