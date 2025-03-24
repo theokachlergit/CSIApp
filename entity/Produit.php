@@ -49,7 +49,7 @@ class Produit
                 Database::getConn()->commit();
             }else{
                 Database::getConn()->rollBack();
-                echo "<scrip>alert('La qte vente doit être inférieure ou égale à la qte en stock</script>";
+                echo "<script>alert('La qte vente doit être inférieure ou égale à la qte en stock')</script>";
             }
         }catch (PDOException $e){
             die("Erreur : " . $e->getMessage());
