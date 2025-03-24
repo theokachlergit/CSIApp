@@ -251,3 +251,4 @@ function removeFormation($pdo, $wooferEmail): void
     $stmt = $pdo->prepare("DELETE FROM suit WHERE idFormation = ? AND emailWoofer = ?");
     $stmt->execute([$idFormation, $wooferEmail]);
 }
+

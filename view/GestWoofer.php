@@ -76,6 +76,9 @@ if (isset($_POST['add'])) {
                             <button type="button" class="btn btn-primary">
                                 <a style="color: white;" href="gestFormation.php?email=<?= $woofer['email'] ?>">Formation</a>
                             </button>
+                            <button type="button" class="btn btn-secondary">
+                                <a style="color: white;" href="gestTache.php?email=<?= $woofer['email'] ?>">Formation</a>
+                            </button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
