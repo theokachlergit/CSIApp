@@ -20,27 +20,6 @@
             color: white;
         }
 
-        body {
-            background-color: #f3f3f3;
-        }
-
-        .navbar {
-            background-color: #4CAF50;
-        }
-
-        .navbar-brand {
-            color: white;
-        }
-
-        .table thead {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .btn-green {
-            background-color: #4CAF50;
-            color: white;
-        }
 
         .header {
             background-color: #4CAF50;
@@ -49,52 +28,17 @@
             text-align: center;
         }
 
-        .btn-green {
-            background-color: #4CAF50;
-            color: white;
-        }
 
         .btn-green:hover {
             background-color: #388E3C;
         }
 
-        body {
-            background-color: #f3f3f3;
-        }
-
-        .navbar {
-            background-color: #4CAF50;
-        }
-
-        .navbar-brand {
-            color: white;
-        }
 
         .table thead {
             background-color: #4CAF50;
             color: white;
         }
 
-        .btn-green {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .btn-green {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .btn-green:hover {
-            background-color: #388E3C;
-        }
 
         .nav-link {
             color: white;
@@ -102,4 +46,24 @@
 
         .nav-item .nav-link {
             color: white;
+        }
+
+        .btn-red {
+            background-color: firebrick;
+            color: white;
+        }
+
+        .btn-red:hover {
+            background-color: darkred;
+            color: white;
+        }
+
+        .btn-blue {
+            background-color: dodgerblue;
+            color: white
+        }
+
+        .btn-blue:hover {
+            background-color: midnightblue;
+            color:white;
         }

@@ -24,7 +24,7 @@ class Produit
     {
         return $this->nom;
     }
-    public function getPrix(): float
+    public function getPrixUnitaire(): float
     {
         return $this->prix;
     }
@@ -37,18 +37,50 @@ class Produit
         return $this->stock;
     }
 
+    public static function mettreAJourStock(int $id, int $qte){
+        try{
+            if (!Database::getConn()->inTransaction()){
+                Database::getConn()->beginTransaction();
+            }
+            $produit = Produit::getProductById($id);
+            if ($qte <= $produit->stock) {
+                $stmt = Database::getConn()->prepare("UPDATE produit SET quantiteStock = $qte WHERE idProduit = $id");
+                $stmt->execute();
+                Database::getConn()->commit();
+            }else{
+                Database::getConn()->rollBack();
+                echo "<scrip>alert('La qte vente doit être inférieure ou égale à la qte en stock</script>";
+            }
+        }catch (PDOException $e){
+            die("Erreur : " . $e->getMessage());
+        }
+    }
+
     public static function getAllProducts() : array{
         // Récupération des produits depuis la BDD
         try {
             $stmt = Database::getConn()->query("SELECT * FROM produit");
             $rawProduits = $stmt->fetchAll();
+            $produits = [];
+            foreach ($rawProduits as $rawProduit){
+                $produits[] = new Produit($rawProduit['idProduit'], $rawProduit['libelleProduit'], $rawProduit['prixUnitaire'], $rawProduit['typeProduit'], $rawProduit['quantiteStock']);
+            }
+            return $produits;
         } catch (PDOException $e) {
             die("Erreur : " . $e->getMessage());
         }
-        $produits = [];
-        foreach ($rawProduits as $rawProduit){
-            $produits[] = new Produit($rawProduit['idProduit'], $rawProduit['libelleProduit'], $rawProduit['prixUnitaire'], $rawProduit['typeProduit'], $rawProduit['quantiteStock']);
+    }
+
+    public static function getProductById(int $id) : Produit{
+        try{
+            $stmt = Database::getConn()->prepare("SELECT * FROM produit WHERE idProduit = $id");
+            $stmt->execute();
+            $rawProduit = $stmt->fetch();
+
+            return new Produit($rawProduit['idProduit'], $rawProduit['libelleProduit'], $rawProduit['prixUnitaire'], $rawProduit['typeProduit'], $rawProduit['quantiteStock']);
+
+        }catch (PDOException $e){
+            die("Erreur : " . $e->getMessage());
         }
-        return $produits;
     }
 }

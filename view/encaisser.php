@@ -1,11 +1,41 @@
 <?php
 session_start();
 require '../databases/database.php'; // Inclusion de la connexion à la BDD
+require '../entity/Produit.php';
+require '../enum/EMethodePaiement.php';
+require '../entity/Vente.php';
 
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['email'])) {
     header("Location: loginPage.php");
     exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+    if (isset($_POST['produitsEncaissement']) && isset($_POST['qte']) && isset($_POST['methodePaiementEncaissement']) && $_POST['methodePaiementEncaissement'] !== "") {
+        $produits = $_POST['produitsEncaissement'];
+        $quantites = $_POST['qte'];
+        $methodePaiement = filter_var($_POST['methodePaiementEncaissement'], FILTER_SANITIZE_SPECIAL_CHARS, FILTER_FLAG_EMPTY_STRING_NULL);
+        $i = 0;
+        $produitsVente = [];
+        $prixVente = 0;
+        foreach ($produits as $produit){
+            $qteFiltre = filter_var($quantites[$i], FILTER_SANITIZE_NUMBER_INT);
+            if ($qteFiltre >= 0) {
+                $produitFiltre = filter_var($produit, FILTER_SANITIZE_NUMBER_INT);
+                $produitsVente[$produitFiltre] = ($produitsVente[$produitFiltre] ?? 0) + $qteFiltre;
+                $prixVente += Produit::getProductById($produitFiltre)->getPrixUnitaire() * $qteFiltre;
+            }
+            $i++;
+        }
+
+        $emailWoofer = filter_var($_SESSION['email'], FILTER_SANITIZE_EMAIL);
+        $vente = new Vente(null, $prixVente, EMethodePaiement::from($methodePaiement), $emailWoofer, $produitsVente);
+        $vente->enregistrerVente();
+    }
+    else{
+        echo "<script>alert('Erreur, tous les champs doivent être remplis')</script>";
+    }
 }
 ?>
 
@@ -33,35 +63,46 @@ if (isset($_SESSION['role'])) {
 ?>
 
 <div class="container mt-4">
-    <h2 class="mb-3">Gestion des Produits</h2>
-    <input type="text" class="form-control mb-3" placeholder="Rechercher un produit...">
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Description</th>
-            <th>Prix</th>
-            <th>Quantité</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($produits as $produit): ?>
+    <h2 class="mb-3">Encaisser</h2>
+    <form action="./encaisser.php" id="encaisserForm" method="post">
+        <h4 class="mb-3">Méthode de paiement</h4>
+        <select name="methodePaiementEncaissement" form="encaisserForm">
+            <option value="">-- Veuillez choisir une méthode de paiement --</option>
+            <?php foreach (EMethodePaiement::cases() as $moyenPaiement){
+                echo "<option value={$moyenPaiement->value}>{$moyenPaiement->name}</option>";
+            }
+            ?>
+        </select>
+        <br>
+        <br>
+        <table class="table table-bordered" id="tableauDynamique">
+            <thead>
             <tr>
-                <td><?= htmlspecialchars($produit['nomProduit']) ?></td>
-                <td><?= htmlspecialchars($produit['descriptionProduit']) ?></td>
-                <td><?= htmlspecialchars($produit['prixProduit']) ?></td>
-                <td><?= htmlspecialchars($produit['quantiteProduit']) ?></td>
-                <td>
-                    <button class="btn btn-primary btn-sm">Modifier</button>
-                    <button class="btn btn-danger btn-sm">Supprimer</button>
-                </td>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Action</th>
             </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <select name="produitsEncaissement[]" form="encaisserForm">
+                                <option value="">-- Veuillez choisir un produit --</option>
+                                <?php foreach (Produit::getAllProducts() as $produit){
+                                    echo "<option value={$produit->getId()}>{$produit->getNom()}</option>";
+                                }?>
+                            </select>
+                        </td>
+                        <td><input type="number" name="qte[]"></td>
+                        <td><button type="button" class="btn supprimerLigne btn-red">Supprimer</button></td>
+                    </tr>
+                </tbody>
+            </table>
 
-    <button class="btn btn-green">Ajouter un Produit</button>
+        <button type="button" class="btn btn-green" id="ajouterLigne">Ajouter un Article</button>
+        <button type="submit" class="btn btn-green">Valider Encaissement</button>
+    </form>
+    <script src="../javascript/tableauDynamique.js"></script>
 </div>
 </body>
 
