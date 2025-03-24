@@ -217,3 +217,37 @@ function changerDateAtelier($pdo): void
     $atelier = new Atelier($_POST['atelierId'], "", enumTypeProduit::Confiture, "", "", statutAtelier::EnCours, "");
     $atelier->modifierDateAtelier($pdo, $date);
 }
+function addFormationExistante($pdo, $wooferEmail): void
+{
+    try {
+        $idFormation = $_POST['idFormation'];
+        $stmt = $pdo->prepare("INSERT INTO suit (idFormation, emailWoofer) VALUES (?, ?)");
+        $stmt->execute([$idFormation, $wooferEmail]);
+    } catch (\Throwable $th) {
+        echo 'Formation déjà ajouté';
+    }
+}
+function createFormation($pdo, $wooferEmail): void
+{
+    try {
+        $libelle = $_POST['libelleFormation'];
+        $stmt = $pdo->prepare("INSERT INTO formation (libelleFormation) VALUES (?)");
+        $stmt->execute([$libelle]);
+
+        // On récupère l'id de la formation nouvellement créée
+        $newId = $pdo->lastInsertId();
+        // Si coché, on ajoute directement la formation au woofer
+        if (isset($_POST['addToWoofer'])) {
+            $stmt2 = $pdo->prepare("INSERT INTO suit (idFormation, emailWoofer) VALUES (?, ?)");
+            $stmt2->execute([$newId, $wooferEmail]);
+        }
+    } catch (\Throwable $th) {
+        // echo 'Formation déjà existante';
+    }
+}
+function removeFormation($pdo, $wooferEmail): void
+{
+    $idFormation = $_POST['idFormation'];
+    $stmt = $pdo->prepare("DELETE FROM suit WHERE idFormation = ? AND emailWoofer = ?");
+    $stmt->execute([$idFormation, $wooferEmail]);
+}

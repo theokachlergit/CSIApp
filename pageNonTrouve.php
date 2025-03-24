@@ -1,5 +1,7 @@
-<?php session_destroy();
-exit(); ?>
+<?php
+session_start();
+session_destroy();
+header("Location: view/loginPage.php") ?>
 <!DOCTYPE html>
 <html lang="fr">
 
