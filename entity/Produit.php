@@ -45,15 +45,9 @@ class Produit
             if (!Database::getConn()->inTransaction()){
                 Database::getConn()->beginTransaction();
             }
-            $produit = Produit::getProductById($id);
-            if ($qte <= $produit->quantiteStock) {
-                $stmt = Database::getConn()->prepare("UPDATE produit SET quantiteStock = $qte WHERE idProduit = $id");
-                $stmt->execute();
-                Database::getConn()->commit();
-            }else{
-                Database::getConn()->rollBack();
-                echo "<script>alert('La qte vente doit être inférieure ou égale à la qte en stock')</script>";
-            }
+            $stmt = Database::getConn()->prepare("UPDATE produit SET quantiteStock = $qte WHERE idProduit = $id");
+            $stmt->execute();
+            Database::getConn()->commit();
         }catch (PDOException $e){
             die("Erreur : " . $e->getMessage());
         }

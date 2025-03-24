@@ -24,11 +24,19 @@ class Vente
             $stmt->execute();
 
             $this->idVente = Database::getConn()->lastInsertId();
-            foreach ($this->produits as $produit => $qte) {
-                $stmt = Database::getConn()->prepare("INSERT INTO estVendu VALUES ($produit, $this->idVente, $qte)");
+            foreach ($this->produits as $produitId => $qte) {
+                $stmt = Database::getConn()->prepare("INSERT INTO estVendu VALUES ($produitId, $this->idVente, $qte)");
                 $stmt->execute();
 
-                Produit::mettreAJourStock($produit, $qte);
+                $produit = Produit::getProductById($produitId);
+
+                if ($qte <= $produit->getQuantiteStock()) {
+                    Produit::mettreAJourStock($produitId, $qte);
+                }else{
+                    Database::getConn()->rollBack();
+                    echo "<script>alert('La qte vente doit être inférieure ou égale à la qte en stock')</script>";
+            }
+
             }
         }catch (PDOException $e){
             die("Erreur : " . $e->getMessage());
