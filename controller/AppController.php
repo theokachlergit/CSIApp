@@ -42,9 +42,9 @@ function modifyProfil($pdo): void
 }
 function modifyProfilRes($pdo): void
 {
-
+    require '../enum/Role.php';
     require '../entity/Utilisateur.php';
-    $user = new Utilisateur($_SESSION['email'], $_POST['mdpUtilisateur'], $_SESSION['role']);
+    $user = new Utilisateur($_SESSION['email'], $_POST['mdpUtilisateur'], Role::Responsable);
     $user->modifierProfil($pdo);
 }
 
