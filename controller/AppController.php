@@ -22,8 +22,12 @@ function modifyProfil($pdo): void
 {
     require '../entity/Utilisateur.php';
     require '../entity/Woofer.php';
-    require '../entity/Personne.php';
-    $user = new Utilisateur($_SESSION['email'], $_POST['mdpUtilisateur'], $_SESSION['role']);
+    require '../enum/Role.php';
+    $user = new Utilisateur(
+        $_SESSION['email'],
+        $_POST['mdpUtilisateur'],
+        Role::Woofer
+    );
     $personne = new Personne(
         $_SESSION['email'],
         $_POST['nom'],
@@ -42,9 +46,9 @@ function modifyProfil($pdo): void
 }
 function modifyProfilRes($pdo): void
 {
-
+    require '../enum/Role.php';
     require '../entity/Utilisateur.php';
-    $user = new Utilisateur($_SESSION['email'], $_POST['mdpUtilisateur'], $_SESSION['role']);
+    $user = new Utilisateur($_SESSION['email'], $_POST['mdpUtilisateur'], Role::Responsable);
     $user->modifierProfil($pdo);
 }
 
