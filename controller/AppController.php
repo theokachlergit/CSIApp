@@ -58,6 +58,7 @@ function prolongerSejour($pdo): void
 
     $woofer = new Woofer("", "", new DateTime('01-01-01'), new DateTime($_POST['dateFinSejour']), "", "", "", "");
     $woofer->prolongerSejour($pdo, $_POST['duree']);
+    header("Location: ../view/gestWoofer.php");
 }
 
 function CreerWoofer($pdo): void
@@ -252,3 +253,11 @@ function removeFormation($pdo, $wooferEmail): void
     $stmt->execute([$idFormation, $wooferEmail]);
 }
 
+function ajouterTache($pdo, $activite, $wooferEmail): void
+{
+    $typeActivite = TypeActivite::from($activite);
+    $tache = new Tache($typeActivite);
+    $tache->effectuerTache($pdo);
+    header("Location: ../view/gestTache.php?email=" . urlencode($wooferEmail));
+    exit;
+}

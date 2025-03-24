@@ -1,8 +1,8 @@
 <?php
 session_start();
 require '../databases/database.php';
-require '../enum/enumTypeActivite.php';
-// require '../entity/Tache.php'; // Fichier où se trouve la classe Tache
+require '../entity/Tache.php'; // Fichier où se trouve la classe Tache
+require '../controller/AppController.php';
 
 $pdo = Database::getConn();
 
@@ -17,11 +17,8 @@ $wooferEmail = $_GET['email'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $activite = $_POST['activiteTache'] ?? null;
     if ($activite) {
-        $typeActivite = TypeActivite::from($activite);
-        $tache = new Tache($typeActivite);
-        $tache->effectuerTache($pdo);
-        header("Location: gestTacheWoofer.php?email=" . urlencode($wooferEmail));
-        exit;
+        var_dump("ICI");
+        ajouterTache($pdo, $activite, $wooferEmail);
     }
 }
 
@@ -40,6 +37,16 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body>
+    <?php if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] != 'Responsable') {
+            header("Location: ../view/profil.php");
+            require 'nav-bar.html'; // Note : header() + require() ici n’est pas forcément cohérent,
+            // car header() redirige avant d'inclure. Vérifiez cette logique.
+        } else {
+            require 'nav-bar-admin.html';
+        }
+    }
+    ?>
     <div class="container">
         <h1>Tâches du Woofer (<?= htmlspecialchars($wooferEmail) ?>)</h1>
         <?php if ($taches): ?>
@@ -69,7 +76,7 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <input type="hidden" name="email" value="<?= htmlspecialchars($wooferEmail) ?>">
             <button type="submit" class="btn btn-primary">Ajouter</button>
-            <a href="gestTacheWoofer.php" class=" btn btn-success">Retour</a>
+            <a href="gestWoofer.php" class=" btn btn-success">Retour</a>
         </form>
     </div>
 
