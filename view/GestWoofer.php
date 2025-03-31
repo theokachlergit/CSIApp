@@ -107,7 +107,7 @@ if (isset($_POST['add'])) {
                         </div>
                         <div class="mb-3">
                             <label for="duree" class="form-label">Prolonger Séjour de (en jours)</label>
-                            <input type="number" class="form-control" name="duree" id="duree">
+                            <input type="number" class="form-control" name="duree" id="duree" required>
                         </div>
                         <button type="submit" name="modify" class="btn btn-success">Modifier</button>
                     </form>

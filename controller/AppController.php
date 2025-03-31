@@ -57,6 +57,9 @@ function prolongerSejour($pdo): void
     require '../entity/Woofer.php';
 
     $woofer = new Woofer("", "", new DateTime('01-01-01'), new DateTime($_POST['dateFinSejour']), "", "", "", "");
+    if ($_POST['duree'] == "") {
+        $_POST['duree'] = 0;
+    }
     $woofer->prolongerSejour($pdo, $_POST['duree']);
     header("Location: ../view/gestWoofer.php");
 }
@@ -116,7 +119,6 @@ function getAllWoofers($pdo): array
 
 function addAtelier($pdo): void
 {
-    require '../entity/Atelier.php';
 
     $idAtelier         = $_POST['idAtelier'] ?? null;
     $thematiqueAtelier = $_POST['thematiqueAtelier'];
